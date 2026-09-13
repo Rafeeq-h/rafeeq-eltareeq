@@ -1,0 +1,2901 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رفيق الطريق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --gold: #c8a96e;
+            --gold-dark: #a07840;
+            --sand: #f5efe6;
+            --sand-dark: #e8dccf;
+            --brown: #5c3d1e;
+            --brown-light: #7a5230;
+            --white: #ffffff;
+            --text: #2d1f0f;
+            --text-muted: #7a6a5a;
+            --error: #c0392b;
+            --success: #27ae60;
+            --warning: #e67e22;
+            --shadow: 0 4px 24px rgba(92, 61, 30, 0.13);
+            --radius: 14px
+        }
+
+        body {
+            font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+            background: var(--sand);
+            color: var(--text);
+            min-height: 100vh
+        }
+
+        /* GATEWAY */
+        #gateway {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #3b2208 0%, #7a5230 50%, #c8a96e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            gap: 32px
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px
+        }
+
+        .logo-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid var(--gold);
+            object-fit: cover;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35)
+        }
+
+        .logo-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4)
+        }
+
+        .logo-sub {
+            font-size: 1rem;
+            color: #f5deb3;
+            text-align: center;
+            max-width: 320px
+        }
+
+        .gw-btns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 10005;
+            pointer-events: auto
+        }
+
+        .gw-btn {
+            padding: 16px 44px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 10010;
+            pointer-events: auto
+        }
+
+        .gw-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38)
+        }
+
+        .gw-btn.doctor {
+            background: var(--gold);
+            color: var(--brown)
+        }
+
+        .gw-btn.citizen {
+            background: #fff;
+            color: var(--brown)
+        }
+
+        /* AUTH OVERLAY */
+        #auth-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 20000;
+            align-items: center;
+            justify-content: center
+        }
+
+        #auth-overlay.active {
+            display: flex !important;
+            z-index: 20000 !important;
+            pointer-events: auto !important
+        }
+
+        .auth-modal {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            width: 95%;
+            max-width: 540px;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35)
+        }
+
+        .auth-modal h2 {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--brown);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px
+        }
+
+        .auth-modal .sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 20px
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 22px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--gold)
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.97rem;
+            font-weight: 600;
+            background: #fff;
+            color: var(--brown);
+            cursor: pointer;
+            border: none;
+            transition: 0.2s
+        }
+
+        .auth-tab.active {
+            background: var(--gold);
+            color: #fff
+        }
+
+        .form-group {
+            margin-bottom: 14px
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--brown);
+            margin-bottom: 5px
+        }
+
+        .form-group label i {
+            color: var(--gold);
+            width: 15px;
+            text-align: center
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1.5px solid var(--sand-dark);
+            border-radius: 9px;
+            font-size: 0.94rem;
+            background: var(--sand);
+            color: var(--text);
+            outline: none;
+            transition: border 0.2s;
+            font-family: inherit
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold)
+        }
+
+        .field-err {
+            color: var(--error);
+            font-size: 0.79rem;
+            margin-top: 4px;
+            font-weight: 700
+        }
+
+        .file-upload-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px dashed var(--gold);
+            border-radius: 9px;
+            padding: 10px 14px;
+            cursor: pointer;
+            background: var(--sand)
+        }
+
+        .file-upload-wrap input[type=file] {
+            display: none
+        }
+
+        .file-upload-wrap .upload-icon {
+            color: var(--gold);
+            font-size: 1.4rem
+        }
+
+        .file-upload-wrap .upload-text {
+            font-size: 0.88rem;
+            color: var(--brown);
+            font-weight: 600
+        }
+
+        .file-preview-rect {
+            width: 100%;
+            max-width: 220px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 7px;
+            display: none;
+            border: 2px solid var(--gold);
+            margin-top: 8px
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+            flex-wrap: wrap
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.93rem;
+            font-weight: 600;
+            color: var(--brown)
+        }
+
+        .radio-option input[type=radio] {
+            accent-color: var(--gold);
+            width: 17px;
+            height: 17px
+        }
+
+        .cond-section {
+            border-right: 3px solid var(--gold);
+            padding: 14px 14px 14px 0;
+            margin: 4px 0;
+            background: rgba(200, 169, 110, 0.07);
+            border-radius: 0 9px 9px 0
+        }
+
+        .cond-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-dark);
+            transform: translateY(-1px)
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            color: var(--gold-dark);
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: underline
+        }
+
+        .form-divider {
+            margin: 18px 0 12px;
+            border-bottom: 2px solid var(--sand-dark);
+            padding-bottom: 8px
+        }
+
+        .form-divider span {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--brown);
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        /* MODALS */
+        #alert-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 50000 !important;
+            align-items: center;
+            justify-content: center
+        }
+
+        #alert-modal.active {
+            display: flex !important;
+            z-index: 50000 !important
+        }
+
+        .alert-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px 26px;
+            max-width: 460px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3)
+        }
+
+        .alert-box button {
+            padding: 11px 38px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px
+        }
+
+        #lock-notice-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 40000;
+            align-items: center;
+            justify-content: center
+        }
+
+        #eval-modal,
+        #chat-modal,
+        #incident-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 35000;
+            align-items: center;
+            justify-content: center
+        }
+
+        .eval-box,
+        .chat-modal-box,
+        .incident-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 26px;
+            width: 95%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35)
+        }
+
+        .eval-criterion {
+            margin-bottom: 14px;
+            background: var(--sand);
+            padding: 12px;
+            border-radius: 8px
+        }
+
+        .eval-lbl {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: var(--brown)
+        }
+
+        .eval-input {
+            width: 100%;
+            accent-color: var(--gold)
+        }
+
+        .eval-guide {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.6
+        }
+
+        .chat-msgs-list {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--sand);
+            padding: 14px;
+            border-radius: 10px;
+            margin: 14px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 200px
+        }
+
+        .chat-msg-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.5
+        }
+
+        .chat-msg-bubble.me {
+            background: var(--gold);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-left-radius: 0
+        }
+
+        .chat-msg-bubble.other {
+            background: #fff;
+            color: var(--text);
+            align-self: flex-start;
+            border-bottom-right-radius: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05)
+        }
+
+        /* PLATFORM */
+        #platform {
+            display: none
+        }
+
+        #platform.active {
+            display: block
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, var(--brown) 0%, var(--brown-light) 100%);
+            color: #fff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15)
+        }
+
+        .topbar .brand {
+            font-size: 1.25rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .topbar .logout-btn {
+            background: var(--gold);
+            color: var(--brown);
+            border: none;
+            border-radius: 8px;
+            padding: 7px 18px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: 0.2s
+        }
+
+        .topbar .logout-btn:hover {
+            background: #fff;
+            color: var(--brown)
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px 85px
+        }
+
+        .role-header-banner {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-right: 6px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px
+        }
+
+        .role-title-txt {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--brown);
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .role-scope-badge {
+            background: var(--sand-dark);
+            color: var(--brown);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem
+        }
+
+        .fb-nav-tabs {
+            display: flex;
+            background: #fff;
+            box-shadow: 0 -4px 24px rgba(92, 61, 30, 0.13);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9000;
+            margin: 0;
+            border-radius: 16px 16px 0 0;
+            border-top: 3px solid var(--sand-dark);
+            padding-bottom: 8px;
+        }
+
+        .fb-tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            gap: 4px
+        }
+
+        .fb-tab i {
+            font-size: 1.4rem;
+            transition: transform 0.25s ease, color 0.25s ease
+        }
+
+        .fb-tab:hover {
+            background: rgba(200, 169, 110, 0.08);
+            color: var(--brown)
+        }
+
+        .fb-tab.active {
+            color: var(--brown);
+            font-weight: 800;
+            background: rgba(200, 169, 110, 0.12)
+        }
+
+        .fb-tab.active i {
+            color: var(--gold-dark);
+            transform: scale(1.18)
+        }
+
+        .fb-tab.active::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            border-radius: 0 0 4px 4px;
+            animation: slideIn 0.25s ease forwards
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scaleX(0.3);
+                opacity: 0
+            }
+
+            to {
+                transform: scaleX(1);
+                opacity: 1
+            }
+        }
+
+        .tab-pane {
+            display: none
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.25s ease
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--sand-dark);
+            margin-bottom: 20px
+        }
+
+        .panel-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--brown);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid var(--sand);
+            padding-bottom: 10px
+        }
+
+        .data-item-row {
+            background: var(--sand);
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-right: 4px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px
+        }
+
+        .data-item-row.clickable {
+            cursor: pointer;
+            transition: 0.15s
+        }
+
+        .data-item-row.clickable:hover {
+            transform: translateX(-3px);
+            background: var(--sand-dark)
+        }
+
+        .data-item-row.empty-state {
+            background: #faf8f5;
+            border-right-color: var(--sand-dark);
+            color: var(--text-muted);
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            font-weight: 600;
+            font-size: 0.92rem
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .info-item {
+            background: var(--sand);
+            padding: 12px 16px;
+            border-radius: 10px;
+            border-right: 4px solid var(--gold)
+        }
+
+        .info-item .lbl {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px
+        }
+
+        .info-item .val {
+            font-size: 0.97rem;
+            font-weight: 700;
+            color: var(--brown)
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block
+        }
+
+        .badge-green {
+            background: #d4edda;
+            color: #155724
+        }
+
+        .badge-yellow {
+            background: #fff3cd;
+            color: #856404
+        }
+
+        .badge-red {
+            background: #f8d7da;
+            color: #721c24
+        }
+
+        .badge-blue {
+            background: #d1ecf1;
+            color: #0c5460
+        }
+
+        .badge-gray {
+            background: #e2e3e5;
+            color: #383d41
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s
+        }
+
+        .btn:hover {
+            opacity: 0.88
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: #fff
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: #fff
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff
+        }
+
+        .btn-gray {
+            background: var(--sand-dark);
+            color: var(--brown)
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            flex-wrap: wrap
+        }
+
+        .filter-bar {
+            background: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center
+        }
+
+        .filter-bar label {
+            font-weight: 700;
+            color: var(--brown);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .filter-bar select {
+            padding: 8px 12px;
+            border: 1.5px solid var(--sand-dark);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--sand);
+            color: var(--text);
+            cursor: pointer;
+            outline: none
+        }
+
+        .filter-bar select:focus {
+            border-color: var(--gold)
+        }
+
+        .section-hdr {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--brown);
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--sand-dark)
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 4px;
+            font-size: 1.4rem
+        }
+
+        .star {
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.15s
+        }
+
+        .star.lit {
+            color: #f4c23a
+        }
+
+        .map-sim {
+            height: 200px;
+            background: linear-gradient(135deg, #e0eedb 0%, #c7e2bf 100%);
+            border-radius: 10px;
+            border: 2px dashed var(--gold-dark);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 14px
+        }
+
+        .map-pin {
+            position: absolute;
+            color: var(--error);
+            font-size: 1.8rem;
+            animation: bounce 1.5s infinite
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .doctor-card {
+            background: var(--sand);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border-right: 4px solid var(--gold)
+        }
+
+        .doctor-card.clickable {
+            cursor: pointer;
+            transition: 0.15s
+        }
+
+        .doctor-card.clickable:hover {
+            background: var(--sand-dark)
+        }
+
+        .score-bar-bg {
+            height: 7px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 4px
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold))
+        }
+
+        .settings-section {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px
+        }
+
+        .settings-section h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--brown);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid var(--sand);
+            padding-bottom: 10px
+        }
+
+        @media(max-width:600px) {
+            .topbar {
+                padding: 10px 16px
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start
+            }
+
+            .fb-tab span {
+                font-size: 0.8rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GATEWAY -->
+    <div id="gateway">
+        <div class="logo-wrap">
+            <img class="logo-img" id="logo-img" src="" alt="رفيق الطريق" onerror="this.style.display='none'" />
+            <div class="logo-title">رفيق الطريق</div>
+            <div class="logo-sub">معاً لبيئة آمنة للإنسان والحيوان</div>
+        </div>
+        <div class="gw-btns">
+            <button type="button" class="gw-btn doctor" id="btn-doctor"><i class="fa-solid fa-stethoscope"></i> طبيب
+                بيطري</button>
+            <button type="button" class="gw-btn citizen" id="btn-citizen"><i class="fa-solid fa-house-user"></i>
+                مواطن</button>
+        </div>
+    </div>
+
+    <!-- LOCK MODAL -->
+    <div id="lock-notice-modal">
+        <div class="alert-box" style="border-top:6px solid var(--error)">
+            <div style="font-size:3rem;color:var(--error);margin-bottom:10px"><i class="fa-solid fa-user-lock"></i>
+            </div>
+            <h2 style="color:var(--brown);margin-bottom:10px">الحساب موقوف مؤقتاً</h2>
+            <p id="lock-notice-msg" style="font-size:0.95rem;color:var(--text);margin-bottom:16px"></p>
+            <div style="background:var(--sand);padding:12px;border-radius:10px;font-weight:800;font-size:1.4rem;color:var(--error);margin-bottom:20px"
+                id="lock-timer-display">00:00:00</div>
+            <button onclick="location.reload()" style="background:var(--brown)">حسناً</button>
+        </div>
+    </div>
+
+    <!-- AUTH OVERLAY -->
+    <div id="auth-overlay">
+        <div class="auth-modal">
+            <div style="width:40px;height:4px;background:var(--sand-dark);border-radius:4px;margin:0 auto 18px;display:none"
+                id="modal-handle"></div>
+            <h2 id="auth-title"></h2>
+            <p class="sub" id="auth-sub"></p>
+
+            <div class="auth-tabs" id="auth-tab-bar">
+                <button type="button" class="auth-tab active" id="tab-register" onclick="switchTab('register')"><i
+                        class="fa-solid fa-user-plus"></i> إنشاء حساب</button>
+                <button type="button" class="auth-tab" id="tab-login" onclick="switchTab('login')"><i
+                        class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div id="register-form">
+
+                <!-- DOCTOR FIELDS -->
+                <div id="doctor-fields" style="display:none">
+                    <div class="form-divider"><span><i class="fa-solid fa-circle-info"></i> البيانات الشخصية</span>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-user"></i> اسم المستخدم</label><input
+                            type="text" id="d-username" placeholder="أدخل اسم المستخدم" />
+                        <div class="field-err" id="err-d-username"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني</label><input
+                            type="email" id="d-email" placeholder="example@email.com" />
+                        <div class="field-err" id="err-d-email"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-phone"></i> رقم الموبايل</label><input
+                            type="tel" id="d-phone" placeholder="01XXXXXXXXX" />
+                        <div class="field-err" id="err-d-phone"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-calendar-days"></i> تاريخ الميلاد</label><input
+                            type="date" id="d-dob" />
+                        <div class="field-err" id="err-d-dob"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> كلمة المرور</label><input
+                            type="password" id="d-pass" placeholder="6 أحرف على الأقل" />
+                        <div class="field-err" id="err-d-pass"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> تأكيد كلمة المرور</label><input
+                            type="password" id="d-pass2" placeholder="أعد إدخال كلمة المرور" />
+                        <div class="field-err" id="err-d-pass2"></div>
+                    </div>
+
+                    <div class="form-divider"><span><i class="fa-solid fa-location-dot"></i> بيانات الموقع</span></div>
+                    <div class="form-group"><label><i class="fa-solid fa-map"></i> المحافظة</label><select id="d-gov"
+                            onchange="onGovChange('d')">
+                            <option value="">-- اختر المحافظة --</option>
+                        </select>
+                        <div class="field-err" id="err-d-gov"></div>
+                    </div>
+                    <div class="form-group" id="d-district-wrap" style="display:none"><label><i
+                                class="fa-solid fa-map-pin"></i> المركز / القسم</label><select id="d-district">
+                            <option value="">-- اختر المركز/القسم --</option>
+                        </select>
+                        <div class="field-err" id="err-d-district"></div>
+                    </div>
+
+                    <div class="form-divider"><span><i class="fa-solid fa-graduation-cap"></i> البيانات
+                            الأكاديمية</span></div>
+                    <div class="form-group"><label><i class="fa-solid fa-school"></i> الجامعة</label><input type="text"
+                            id="d-university" placeholder="اسم الجامعة" />
+                        <div class="field-err" id="err-d-university"></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user-graduate"></i> الوضع الأكاديمي</label>
+                        <div class="radio-group">
+                            <label class="radio-option"><input type="radio" name="d-status" value="student"
+                                    onchange="onAcademicChange()" /> طالب / امتياز</label>
+                            <label class="radio-option"><input type="radio" name="d-status" value="graduate"
+                                    onchange="onAcademicChange()" /> خريج</label>
+                        </div>
+                        <div class="field-err" id="err-d-status"></div>
+                    </div>
+
+                    <div id="student-section" style="display:none">
+                        <div class="cond-section">
+                            <div class="cond-title"><i class="fa-solid fa-book-open"></i> بيانات الطالب</div>
+                            <div class="form-group"><label><i class="fa-solid fa-layer-group"></i> السنة
+                                    الدراسية</label><select id="d-year">
+                                    <option value="">-- اختر السنة --</option>
+                                    <option>الفرقة الأولى</option>
+                                    <option>الفرقة الثانية</option>
+                                    <option>الفرقة الثالثة</option>
+                                    <option>الفرقة الرابعة</option>
+                                    <option>الفرقة الخامسة</option>
+                                    <option>سنة الامتياز</option>
+                                </select>
+                                <div class="field-err" id="err-d-year"></div>
+                            </div>
+                            <div class="form-group"><label><i class="fa-solid fa-chart-bar"></i> المستوى
+                                    الدراسي</label><select id="d-level">
+                                    <option value="">-- اختر المستوى --</option>
+                                    <option>ممتاز</option>
+                                    <option>جيد جداً</option>
+                                    <option>جيد</option>
+                                    <option>مقبول</option>
+                                </select>
+                                <div class="field-err" id="err-d-level"></div>
+                            </div>
+                            <div class="form-group"><label><i class="fa-solid fa-id-badge"></i> صورة الكارنيه (الوجه
+                                    الأمامي)</label><label class="file-upload-wrap"><i
+                                        class="fa-solid fa-camera upload-icon"></i><span class="upload-text">اختر صورة
+                                        الكارنيه الأمامية</span><input type="file" accept="image/*" id="d-carneh-front"
+                                        onchange="previewFile(this,'prev-carneh-front')" /></label><img
+                                    class="file-preview-rect" id="prev-carneh-front" /></div>
+                            <div class="form-group"><label><i class="fa-solid fa-id-badge"></i> صورة الكارنيه
+                                    (الخلفية)</label><label class="file-upload-wrap"><i
+                                        class="fa-solid fa-camera upload-icon"></i><span class="upload-text">اختر صورة
+                                        الكارنيه الخلفية</span><input type="file" accept="image/*" id="d-carneh-back"
+                                        onchange="previewFile(this,'prev-carneh-back')" /></label><img
+                                    class="file-preview-rect" id="prev-carneh-back" /></div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-building-columns"></i> هل يوجد سكن جامعي؟</label>
+                                <div class="radio-group"><label class="radio-option"><input type="radio" name="d-dorm"
+                                            value="yes" /> نعم</label><label class="radio-option"><input type="radio"
+                                            name="d-dorm" value="no" /> لا</label></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="graduate-section" style="display:none">
+                        <div class="cond-section">
+                            <div class="cond-title"><i class="fa-solid fa-scroll"></i> بيانات الخريج</div>
+                            <div class="form-group"><label><i class="fa-solid fa-calendar-check"></i> عام
+                                    التخرج</label><input type="number" id="d-grad-year" placeholder="مثال: 2022"
+                                    min="1990" max="2030" />
+                                <div class="field-err" id="err-d-grad-year"></div>
+                            </div>
+                            <div class="form-group"><label><i class="fa-solid fa-file-certificate"></i> شهادة
+                                    التخرج</label><label class="file-upload-wrap"><i
+                                        class="fa-solid fa-upload upload-icon"></i><span class="upload-text">ارفع صورة
+                                        الشهادة</span><input type="file" accept="image/*,application/pdf" id="d-cert"
+                                        onchange="previewFile(this,'prev-cert')" /></label><img
+                                    class="file-preview-rect" id="prev-cert" /></div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"><span><i class="fa-solid fa-id-card"></i> صورة الهوية الوطنية</span></div>
+                    <div class="form-group"><label><i class="fa-solid fa-id-card"></i> الهوية (الوجه
+                            الأمامي)</label><label class="file-upload-wrap"><i
+                                class="fa-solid fa-camera upload-icon"></i><span class="upload-text">اختر الوجه الأمامي
+                                للهوية</span><input type="file" accept="image/*" id="d-id-front"
+                                onchange="previewFile(this,'prev-d-id-front')" /></label><img class="file-preview-rect"
+                            id="prev-d-id-front" /></div>
+                    <div class="form-group"><label><i class="fa-solid fa-id-card"></i> الهوية (الخلفية)</label><label
+                            class="file-upload-wrap"><i class="fa-solid fa-camera upload-icon"></i><span
+                                class="upload-text">اختر خلفية الهوية</span><input type="file" accept="image/*"
+                                id="d-id-back" onchange="previewFile(this,'prev-d-id-back')" /></label><img
+                            class="file-preview-rect" id="prev-d-id-back" /></div>
+                </div>
+
+                <!-- CITIZEN FIELDS -->
+                <div id="citizen-fields" style="display:none">
+                    <div class="form-divider"><span><i class="fa-solid fa-circle-info"></i> البيانات الشخصية</span>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-user"></i> اسم المستخدم</label><input
+                            type="text" id="c-username" placeholder="أدخل اسم المستخدم" />
+                        <div class="field-err" id="err-c-username"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني</label><input
+                            type="email" id="c-email" placeholder="example@email.com" />
+                        <div class="field-err" id="err-c-email"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-phone"></i> رقم الموبايل</label><input
+                            type="tel" id="c-phone" placeholder="01XXXXXXXXX" />
+                        <div class="field-err" id="err-c-phone"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-calendar-days"></i> تاريخ الميلاد</label><input
+                            type="date" id="c-dob" />
+                        <div class="field-err" id="err-c-dob"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> كلمة المرور</label><input
+                            type="password" id="c-pass" placeholder="6 أحرف على الأقل" />
+                        <div class="field-err" id="err-c-pass"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> تأكيد كلمة المرور</label><input
+                            type="password" id="c-pass2" placeholder="أعد إدخال كلمة المرور" />
+                        <div class="field-err" id="err-c-pass2"></div>
+                    </div>
+
+                    <div class="form-divider"><span><i class="fa-solid fa-location-dot"></i> بيانات الموقع</span></div>
+                    <div class="form-group"><label><i class="fa-solid fa-map"></i> المحافظة</label><select id="c-gov"
+                            onchange="onGovChange('c')">
+                            <option value="">-- اختر المحافظة --</option>
+                        </select>
+                        <div class="field-err" id="err-c-gov"></div>
+                    </div>
+                    <div class="form-group" id="c-district-wrap" style="display:none"><label><i
+                                class="fa-solid fa-map-pin"></i> المركز / القسم</label><select id="c-district">
+                            <option value="">-- اختر المركز/القسم --</option>
+                        </select>
+                        <div class="field-err" id="err-c-district"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-map-location-dot"></i> العنوان
+                            التفصيلي</label><textarea id="c-address" placeholder="أدخل عنوانك بالتفصيل..."></textarea>
+                    </div>
+
+                    <div class="form-divider"><span><i class="fa-solid fa-id-card"></i> صورة الهوية الوطنية</span></div>
+                    <div class="form-group"><label><i class="fa-solid fa-id-card"></i> الهوية (الوجه
+                            الأمامي)</label><label class="file-upload-wrap"><i
+                                class="fa-solid fa-camera upload-icon"></i><span class="upload-text">اختر الوجه الأمامي
+                                للهوية</span><input type="file" accept="image/*" id="c-id-front"
+                                onchange="previewFile(this,'prev-c-id-front')" /></label><img class="file-preview-rect"
+                            id="prev-c-id-front" /></div>
+                    <div class="form-group"><label><i class="fa-solid fa-id-card"></i> الهوية (الخلفية)</label><label
+                            class="file-upload-wrap"><i class="fa-solid fa-camera upload-icon"></i><span
+                                class="upload-text">اختر خلفية الهوية</span><input type="file" accept="image/*"
+                                id="c-id-back" onchange="previewFile(this,'prev-c-id-back')" /></label><img
+                            class="file-preview-rect" id="prev-c-id-back" /></div>
+                </div>
+
+                <button type="button" class="btn-submit" onclick="submitRegister()"><i
+                        class="fa-solid fa-user-check"></i> إنشاء الحساب</button>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="login-form" style="display:none">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> اسم المستخدم / رقم الموبايل / البريد</label>
+                    <input type="text" id="login-id" placeholder="اسم المستخدم أو 01XXXXXXXXX أو example@email.com" />
+                    <div class="field-err" id="err-login-id"></div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-lock"></i> كلمة المرور</label>
+                    <input type="password" id="login-pass" placeholder="أدخل كلمة المرور" />
+                    <div class="field-err" id="err-login-pass"></div>
+                </div>
+                <div style="text-align:left;margin:-4px 0 14px">
+                    <span
+                        style="color:var(--gold-dark);font-size:0.88rem;cursor:pointer;font-weight:700;text-decoration:underline"
+                        onclick="showForgotPassword()">
+                        <i class="fa-solid fa-key"></i> هل نسيت كلمة السر؟
+                    </span>
+                </div>
+                <button type="button" class="btn-submit" onclick="submitLogin()"><i
+                        class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+            </div>
+
+            <!-- FORGOT FORM -->
+            <div id="forgot-form" style="display:none">
+                <div
+                    style="background:rgba(200,169,110,0.12);padding:14px;border-radius:10px;margin-bottom:16px;border-right:4px solid var(--gold)">
+                    <h4 style="color:var(--brown);font-weight:800;margin-bottom:4px"><i
+                            class="fa-solid fa-shield-halved"></i> استعادة كلمة المرور</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted)">أدخل اسم المستخدم أو رقم الموبايل أو البريد
+                        المرتبط بحسابك.</p>
+                </div>
+                <div id="forgot-step-1">
+                    <div class="form-group"><label><i class="fa-solid fa-magnifying-glass"></i> حسابك</label><input
+                            type="text" id="forgot-search-id" placeholder="أدخل بيانات حسابك" />
+                        <div class="field-err" id="err-forgot-search"></div>
+                    </div>
+                    <button type="button" class="btn-submit" onclick="verifyForgotUser()"><i
+                            class="fa-solid fa-magnifying-glass"></i> البحث عن الحساب</button>
+                </div>
+                <div id="forgot-step-2" style="display:none">
+                    <div
+                        style="background:#e8f4ec;padding:10px 14px;border-radius:8px;margin-bottom:14px;color:var(--success);font-weight:700;font-size:0.9rem">
+                        <i class="fa-solid fa-user-check"></i> تم العثور على حساب: <span
+                            id="forgot-found-username"></span>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> كلمة المرور الجديدة</label><input
+                            type="password" id="forgot-new-pass" placeholder="6 أحرف على الأقل" />
+                        <div class="field-err" id="err-forgot-new-pass"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fa-solid fa-lock"></i> تأكيد كلمة المرور
+                            الجديدة</label><input type="password" id="forgot-new-pass2"
+                            placeholder="أعد إدخال كلمة المرور" />
+                        <div class="field-err" id="err-forgot-new-pass2"></div>
+                    </div>
+                    <button type="button" class="btn-submit" onclick="resetUserPassword()"><i
+                            class="fa-solid fa-key"></i> حفظ كلمة المرور الجديدة</button>
+                </div>
+            </div>
+
+            <span class="back-link" onclick="closeAuth()"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</span>
+        </div>
+    </div>
+
+    <!-- ALERT MODAL -->
+    <div id="alert-modal">
+        <div class="alert-box">
+            <div style="font-size:2.5rem;color:var(--gold);margin-bottom:10px"><i class="fa-solid fa-circle-info"></i>
+            </div>
+            <p id="alert-msg" style="white-space:pre-line;margin-bottom:4px"></p>
+            <button onclick="closeAlert()">فهمت</button>
+        </div>
+    </div>
+
+    <!-- EVALUATION MODAL -->
+    <div id="eval-modal">
+        <div class="eval-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                <h3
+                    style="color:var(--brown);font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px">
+                    <i class="fa-solid fa-star-half-stroke"></i> تقييم الطبيب الميداني (من 100)</h3>
+                <button onclick="document.getElementById('eval-modal').style.display='none'"
+                    style="background:none;border:none;font-size:1.4rem;cursor:pointer"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input type="hidden" id="eval-target-username" />
+            <div style="background:var(--sand);padding:10px 14px;border-radius:8px;margin-bottom:14px;font-weight:700;color:var(--brown)"
+                id="eval-doctor-name"></div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>1. سرعة الاستجابة للبلاغات</span><span id="score-val-1">20 / 20</span></div>
+                <input type="range" class="eval-input" id="eval-q1" min="0" max="20" value="20"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">20=استجابة دقيقة | 16=جيد | 12=متوسط | 8=تأخير | 4=ضعيف</div>
+            </div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>2. الالتزام بمواعيد الحملات</span><span id="score-val-2">10 / 10</span>
+                </div>
+                <input type="range" class="eval-input" id="eval-q2" min="0" max="10" value="10"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">10=حضور مبكر | 8=تأخير بسيط | 6=تأخير متكرر | 4=غياب</div>
+            </div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>3. دقة التعامل وجودة التوثيق</span><span id="score-val-3">35 / 35</span>
+                </div>
+                <input type="range" class="eval-input" id="eval-q3" min="0" max="35" value="35"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">35=توثيق كامل | 25=جيد | 15=متوسط</div>
+            </div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>4. الالتزام بتعليمات مدير المنطقة</span><span id="score-val-4">15 /
+                        15</span></div>
+                <input type="range" class="eval-input" id="eval-q4" min="0" max="15" value="15"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">15=التزام تام | 12=مخالفات نادرة | 9=متكررة</div>
+            </div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>5. حسن التعامل مع المواطنين</span><span id="score-val-5">10 / 10</span>
+                </div>
+                <input type="range" class="eval-input" id="eval-q5" min="0" max="10" value="10"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">10=راقٍ | 8=جيد | 6=مقبول | 4=شكاوى</div>
+            </div>
+            <div class="eval-criterion">
+                <div class="eval-lbl"><span>6. التعاون مع الفريق</span><span id="score-val-6">10 / 10</span></div>
+                <input type="range" class="eval-input" id="eval-q6" min="0" max="10" value="10"
+                    oninput="updateEvalCalc()" />
+                <div class="eval-guide">10=متعاون جداً | 8=جيد | 6=متوسط | 4=مشاكل</div>
+            </div>
+            <div
+                style="background:var(--sand-dark);padding:14px;border-radius:10px;margin:16px 0;display:flex;justify-content:space-between;align-items:center;font-weight:800">
+                <span>التقييم الإجمالي النهائي:</span>
+                <span id="eval-total-score" style="font-size:1.4rem;color:var(--gold-dark)">100 / 100</span>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-comment"></i> ملاحظة للطبيب</label>
+                <textarea id="eval-notes" placeholder="أكتب ملاحظاتك..." style="min-height:80px"></textarea>
+            </div>
+            <button class="btn-submit" onclick="saveDoctorEvaluation()"><i class="fa-solid fa-floppy-disk"></i> حفظ
+                التقييم</button>
+            <button onclick="document.getElementById('eval-modal').style.display='none'"
+                style="background:var(--sand-dark);width:100%;padding:10px;border:none;border-radius:9px;font-weight:700;margin-top:8px;cursor:pointer">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- CHAT MODAL -->
+    <div id="chat-modal">
+        <div class="chat-modal-box">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--sand-dark);padding-bottom:10px">
+                <h3 style="color:var(--brown)" id="chat-title"><i class="fa-solid fa-comments"></i> سجل المحادثات</h3>
+                <button onclick="document.getElementById('chat-modal').style.display='none'"
+                    style="background:none;border:none;font-size:1.3rem;cursor:pointer"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="chat-msgs-list" id="chat-messages-container"></div>
+            <div style="display:flex;gap:10px">
+                <input type="text" id="chat-reply-input" placeholder="اكتب رسالتك هنا..."
+                    style="flex:1;padding:10px;border:1px solid var(--sand-dark);border-radius:8px;font-family:inherit" />
+                <button onclick="sendChatMessage()" class="btn btn-gold" style="padding:10px 20px"><i
+                        class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INCIDENT DETAIL MODAL -->
+    <div id="incident-modal">
+        <div class="incident-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                <h3 style="color:var(--brown);font-weight:800;display:flex;align-items:center;gap:8px"><i
+                        class="fa-solid fa-triangle-exclamation"></i> تفاصيل البلاغ</h3>
+                <button onclick="closeIncidentModal()"
+                    style="background:none;border:none;font-size:1.4rem;cursor:pointer"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="incident-detail-content"></div>
+            <div id="incident-star-section"
+                style="display:none;margin-top:16px;border-top:2px solid var(--sand-dark);padding-top:14px">
+                <div style="font-weight:800;color:var(--brown);margin-bottom:8px"><i class="fa-solid fa-star"></i> تقييم
+                    أداء الطبيب (بالنجوم):</div>
+                <div class="star-rating" id="incident-stars">
+                    <i class="fa-solid fa-star star" onclick="setIncidentStar(1)"></i>
+                    <i class="fa-solid fa-star star" onclick="setIncidentStar(2)"></i>
+                    <i class="fa-solid fa-star star" onclick="setIncidentStar(3)"></i>
+                    <i class="fa-solid fa-star star" onclick="setIncidentStar(4)"></i>
+                    <i class="fa-solid fa-star star" onclick="setIncidentStar(5)"></i>
+                </div>
+                <div class="form-group" style="margin-top:10px">
+                    <label><i class="fa-solid fa-comment-dots"></i> ملاحظة للطبيب</label>
+                    <textarea id="incident-note-input" placeholder="اكتب ملاحظتك..." style="min-height:70px"></textarea>
+                </div>
+                <button class="btn btn-gold" onclick="saveIncidentRating()"
+                    style="width:100%;margin-top:8px;padding:10px"><i class="fa-solid fa-floppy-disk"></i> حفظ
+                    التقييم</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLATFORM -->
+    <div id="platform">
+        <div class="topbar">
+            <div class="brand"><img id="top-logo" src="" alt="" onerror="this.style.display='none'"
+                    style="height:32px;border-radius:50%;margin-left:8px" /> رفيق الطريق</div>
+            <div style="display:flex;align-items:center;gap:12px">
+                <span style="font-size:0.93rem;color:#f5deb3" id="top-username"></span>
+                <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل
+                    الخروج</button>
+            </div>
+        </div>
+    
+        <div class="dashboard">
+            <div class="role-header-banner">
+                <div>
+                    <div class="role-title-txt" id="user-role-display"><i class="fa-solid fa-user-doctor"></i> طبيب بيطري
+                    </div>
+                    <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px" id="user-location-display">المحافظة
+                        والمركز</div>
+                </div>
+                <div class="role-scope-badge" id="role-scope-badge">النطاق: كامل الجمهورية</div>
+            </div>
+    
+            <div class="fb-nav-tabs">
+                <button class="fb-tab" id="fb-tab-settings" onclick="switchRoleTab('tab-settings')">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>الإعدادات</span>
+                </button>
+                <button class="fb-tab active" id="fb-tab-main" onclick="switchRoleTab('tab-main')">
+                    <i class="fa-solid fa-house"></i>
+                    <span>الرئيسية</span>
+                </button>
+                <button class="fb-tab" id="fb-tab-account" onclick="switchRoleTab('tab-account')">
+                    <i class="fa-solid fa-user"></i>
+                    <span>الحساب</span>
+                </button>
+            </div>
+    
+            <div id="tab-main" class="tab-pane active">
+                <div id="role-dynamic-main"></div>
+            </div>
+            <div id="tab-settings" class="tab-pane">
+                <div id="role-dynamic-settings"></div>
+            </div>
+            <div id="tab-account" class="tab-pane">
+                <div id="role-dynamic-account"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- لوحة الإدارة -->
+    <div id="admin-panel" class="dashboard" style="display:none; max-width: 1200px;">
+        <div class="role-header-banner" style="background:var(--brown);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <h2 style="margin:0"><i class="fa-solid fa-shield-halved"></i> إدارة رفيق الطريق</h2>
+                <div style="font-size:0.9rem;opacity:0.9" id="admin-logged-info"></div>
+            </div>
+            <button class="btn" style="background:#fff;color:var(--brown);font-weight:bold" onclick="adminLogout()">تسجيل الخروج</button>
+        </div>
+
+        <div class="fb-nav-tabs" style="position:relative;box-shadow:none;border-radius:10px;margin-bottom:20px;padding:0;">
+            <button class="fb-tab active" id="adm-tab-users-btn" onclick="switchAdminTab('users')"><i class="fa-solid fa-users"></i> المستخدمين</button>
+            <button class="fb-tab" id="adm-tab-logs-btn" onclick="switchAdminTab('logs')"><i class="fa-solid fa-clock-rotate-left"></i> سجل النشاطات</button>
+        </div>
+
+        <div id="adm-tab-users">
+            <div class="settings-section" style="margin-bottom:20px">
+                <h3 style="color:var(--gold-dark)"><i class="fa-solid fa-user-doctor"></i> الأطباء (قيد المراجعة)</h3>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:700px;">
+                        <thead>
+                            <tr style="background:var(--sand);color:var(--brown);">
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الاسم</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">رقم الهاتف</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الجامعة/المرحلة</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">المستندات</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الحالة الحالية</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">تغيير الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-doctors-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3 style="color:var(--gold-dark)"><i class="fa-solid fa-users"></i> المواطنين والأطباء المعتمدين</h3>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:600px;">
+                        <thead>
+                            <tr style="background:var(--sand);color:var(--brown);">
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الاسم</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">النوع</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">رقم الهاتف</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الحالة</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-approved-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="adm-tab-logs" style="display:none;">
+            <div class="settings-section">
+                <h3 style="color:var(--gold-dark)"><i class="fa-solid fa-list-check"></i> سجل نشاطات الإدارة</h3>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:600px;">
+                        <thead>
+                            <tr style="background:var(--sand);color:var(--brown);">
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الوقت والتاريخ</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">رقم المسئول</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">النشاط / التعديل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-logs-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة تتبع حالة الطبيب -->
+    <div id="doctor-progress-panel" class="dashboard" style="display:none; max-width: 800px; text-align:center;">
+        <div class="settings-section" style="padding:40px 20px;">
+            <h2 style="color:var(--brown);margin-bottom:10px;"><i class="fa-solid fa-stethoscope"></i> حالة طلب الانضمام</h2>
+            <p style="color:var(--text-muted);margin-bottom:30px;">تابع حالة طلبك للانضمام كطبيب بيطري معتمد في رفيق الطريق.</p>
+            
+            <div style="display:flex;justify-content:space-between;align-items:center;position:relative;margin:40px 0;">
+                <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:var(--sand-dark);z-index:1;transform:translateY(-50%);"></div>
+                <div id="prog-line-active" style="position:absolute;top:50%;right:0;height:4px;background:var(--gold-dark);z-index:2;transform:translateY(-50%);transition:width 0.3s;width:0%;"></div>
+                
+                <div class="prog-step" id="step-pending" style="position:relative;z-index:3;background:var(--bg);padding:10px;">
+                    <div class="step-icon" style="width:40px;height:40px;border-radius:50%;background:var(--sand-dark);color:#fff;display:flex;justify-content:center;align-items:center;margin:0 auto 10px;font-size:1.2rem;"><i class="fa-solid fa-user-plus"></i></div>
+                    <div style="font-weight:bold;font-size:0.9rem;">إنشاء حساب</div>
+                </div>
+                <div class="prog-step" id="step-test" style="position:relative;z-index:3;background:var(--bg);padding:10px;">
+                    <div class="step-icon" style="width:40px;height:40px;border-radius:50%;background:var(--sand-dark);color:#fff;display:flex;justify-content:center;align-items:center;margin:0 auto 10px;font-size:1.2rem;"><i class="fa-solid fa-file-signature"></i></div>
+                    <div style="font-weight:bold;font-size:0.9rem;">الاختبار</div>
+                </div>
+                <div class="prog-step" id="step-interview" style="position:relative;z-index:3;background:var(--bg);padding:10px;">
+                    <div class="step-icon" style="width:40px;height:40px;border-radius:50%;background:var(--sand-dark);color:#fff;display:flex;justify-content:center;align-items:center;margin:0 auto 10px;font-size:1.2rem;"><i class="fa-solid fa-handshake"></i></div>
+                    <div style="font-weight:bold;font-size:0.9rem;">المقابلة</div>
+                </div>
+                <div class="prog-step" id="step-approved" style="position:relative;z-index:3;background:var(--bg);padding:10px;">
+                    <div class="step-icon" style="width:40px;height:40px;border-radius:50%;background:var(--sand-dark);color:#fff;display:flex;justify-content:center;align-items:center;margin:0 auto 10px;font-size:1.2rem;"><i class="fa-solid fa-check"></i></div>
+                    <div style="font-weight:bold;font-size:0.9rem;">الاعتماد</div>
+                </div>
+            </div>
+            
+            <div id="prog-msg-box" style="background:rgba(200,169,110,0.1);padding:20px;border-radius:10px;margin-bottom:20px;border:1px solid var(--gold);">
+                <h3 id="prog-msg-title" style="color:var(--brown);margin-bottom:10px;"></h3>
+                <p id="prog-msg-desc" style="margin:0;"></p>
+            </div>
+            
+            <button class="btn btn-submit" style="background:var(--error);max-width:200px;margin:0 auto;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
+        </div>
+    </div>
+        /* ============================================================
+           رفيق الطريق — السكربت الكامل
+           ============================================================ */
+
+        /* ---------- الحالة العامة ---------- */
+        var currentRole = null;
+        var currentTab = 'register';
+        var forgotTargetUser = null;
+        var currentChatTarget = '';
+        var currentIncidentId = null;
+        var incidentStarValue = 0;
+        var activeRoleKey = 'field_vet';
+
+        /* ---------- بيانات المحافظات ---------- */
+        var GOV_DATA = {
+            'القاهرة': ['مدينة نصر', 'المعادي', 'مصر الجديدة', 'شبرا', 'الزيتون', 'حلوان', 'المرج', 'التجمع الخامس', 'القاهرة الجديدة'],
+            'الجيزة': ['الدقي', 'المهندسين', 'الهرم', 'فيصل', 'العجوزة', '6 أكتوبر', 'الشيخ زايد', 'البدرشين'],
+            'الإسكندرية': ['المنتزه', 'الرمل', 'سيدي جابر', 'محرم بك', 'العجمي', 'العامرية', 'برج العرب'],
+            'بورسعيد': ['حي الشرق', 'حي العرب', 'حي المناخ', 'حي الضواحي', 'حي الزهور', 'بورفؤاد'],
+            'الشرقية': ['الزقازيق', 'العاشر من رمضان', 'منيا القمح', 'بلبيس', 'أبو كبير', 'فاقوس'],
+            'الغربية': ['طنطا', 'المحلة الكبرى', 'زفتى', 'كفر الزيات', 'السنطة'],
+            'المنوفية': ['شبين الكوم', 'منوف', 'مدينة السادات', 'أشمون', 'قويسنا'],
+            'القليوبية': ['بنها', 'شبرا الخيمة', 'العبور', 'القناطر الخيرية', 'طوخ'],
+            'الدقهلية': ['المنصورة', 'ميت غمر', 'السنبلاوين', 'دكرنس', 'طلخا'],
+            'البحيرة': ['دمنهور', 'كفر الدوار', 'إيتاي البارود', 'رشيد'],
+            'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'بيلا', 'بلطيم'],
+            'دمياط': ['دمياط', 'دمياط الجديدة', 'رأس البر', 'فارسكور'],
+            'الإسماعيلية': ['الإسماعيلية', 'فايد', 'التل الكبير', 'القنطرة'],
+            'السويس': ['السويس', 'فيصل', 'عتاقة', 'الجناين'],
+            'الفيوم': ['الفيوم', 'طامية', 'سنورس', 'إطسا'],
+            'بني سويف': ['بني سويف', 'الواسطى', 'ناصر', 'ببا'],
+            'المنيا': ['المنيا', 'ملوي', 'مغاغة', 'بني مزار'],
+            'أسيوط': ['أسيوط', 'ديروط', 'منفلوط', 'أبو تيج'],
+            'سوهاج': ['سوهاج', 'أخميم', 'جرجا', 'طهطا'],
+            'قنا': ['قنا', 'نجع حمادي', 'قوص', 'دشنا'],
+            'الأقصر': ['الأقصر', 'إسنا', 'أرمنت'],
+            'أسوان': ['أسوان', 'إدفو', 'كوم أمبو'],
+            'البحر الأحمر': ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم'],
+            'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
+            'مطروح': ['مرسى مطروح', 'العلمين', 'الضبعة', 'سيوة'],
+            'شمال سيناء': ['العريش', 'بئر العبد', 'الشيخ زويد', 'رفح'],
+            'جنوب سيناء': ['شرم الشيخ', 'الطور', 'دهب', 'نويبع']
+        };
+        var GOVS_ALL = Object.keys(GOV_DATA);
+        var CLOUD_SYNC_URL = 'https://rafeeq-eltareeq-default-rtdb.firebaseio.com/users.json';
+        var STORE_KEY = 'rafiq_users';
+
+        /* ---------- دوال مساعدة ---------- */
+        function cleanStr(str) { return (str || '').toString().trim().toLowerCase().replace(/[\s\-\+]/g, ''); }
+        function cleanPhone(str) {
+            var digits = (str || '').toString().replace(/\D/g, '');
+            if (digits.indexOf('0020') === 0) digits = '0' + digits.substring(4);
+            else if (digits.indexOf('20') === 0) digits = '0' + digits.substring(2);
+            return digits;
+        }
+        function v(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+        function setErr(id, msg) { var e = document.getElementById(id); if (e) e.textContent = msg; }
+        function clearErrors() { document.querySelectorAll('.field-err').forEach(function (e) { e.textContent = ''; }); }
+        function showAlert(msg) {
+            var m = document.getElementById('alert-modal');
+            var t = document.getElementById('alert-msg');
+            if (t) t.textContent = msg;
+            if (m) m.classList.add('active');
+        }
+        function closeAlert() { var m = document.getElementById('alert-modal'); if (m) m.classList.remove('active'); }
+        function getRoleTitle(r) { var m = { platform_director: 'رئيس المنصة', sector_director: 'رئيس القطاع', area_manager: 'مدير المنطقة', field_vet: 'طبيب بيطري ميداني' }; return m[r] || 'طبيب بيطري'; }
+        function getRoleIcon(r) { var m = { platform_director: 'fa-crown', sector_director: 'fa-building-shield', area_manager: 'fa-map-location-dot', field_vet: 'fa-stethoscope' }; return m[r] || 'fa-user-doctor'; }
+
+        /* ---------- تخزين المستخدمين ---------- */
+        function getUsers() {
+            try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch (e) { return []; }
+        }
+        function saveUsers(u) {
+            localStorage.setItem(STORE_KEY, JSON.stringify(u));
+            try {
+                fetch(CLOUD_SYNC_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(function () { });
+            } catch (e) { }
+        }
+        function fetchCloudUsers() {
+            try {
+                fetch(CLOUD_SYNC_URL)
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (!data) return;
+                        var arr = Array.isArray(data) ? data : Object.values(data);
+                        if (arr.length === 0) return;
+                        var local = getUsers();
+                        var merged = local.slice();
+                        arr.forEach(function (cu) {
+                            var i = merged.findIndex(function (x) { return cleanStr(x.username) === cleanStr(cu.username); });
+                            if (i > -1) merged[i] = Object.assign({}, merged[i], cu);
+                            else merged.push(cu);
+                        });
+                        localStorage.setItem(STORE_KEY, JSON.stringify(merged));
+                    })
+                    .catch(function () { });
+            } catch (e) { }
+        }
+        function getSession() {
+            try {
+                var s = JSON.parse(localStorage.getItem('rafiq_session'));
+                if (s && typeof s === 'object' && s.username && s.role) return s;
+                s = JSON.parse(sessionStorage.getItem('rafiq_session'));
+                if (s && typeof s === 'object' && s.username && s.role) return s;
+                return null;
+            } catch (e) { return null; }
+        }
+        function saveSession(d) {
+            try {
+                if (!d || !d.username || !d.role) return;
+                var data = JSON.stringify(d);
+                localStorage.setItem('rafiq_session', data);
+                sessionStorage.setItem('rafiq_session', data);
+            } catch (e) { }
+        }
+        function clearSession() {
+            localStorage.removeItem('rafiq_session');
+            sessionStorage.removeItem('rafiq_session');
+        }
+
+        /* ---------- الدوال الحرجة ---------- */
+        function openAuth(role) {
+            try {
+                currentRole = role;
+                var isDoc = (role === 'doctor');
+                var titleEl = document.getElementById('auth-title');
+                if (titleEl) {
+                    titleEl.innerHTML = isDoc
+                        ? '<i class="fa-solid fa-stethoscope"></i> حساب الطبيب البيطري'
+                        : '<i class="fa-solid fa-house-user"></i> حساب المواطن';
+                }
+                var subEl = document.getElementById('auth-sub');
+                if (subEl) {
+                    subEl.textContent = isDoc ? 'أطباء بيطريون وطلاب بيطرة فقط' : 'مرحباً بك في مجتمع رفيق الطريق';
+                }
+                var dFields = document.getElementById('doctor-fields');
+                if (dFields) dFields.style.display = isDoc ? 'block' : 'none';
+                var cFields = document.getElementById('citizen-fields');
+                if (cFields) cFields.style.display = isDoc ? 'none' : 'block';
+                switchTab('register');
+                var overlay = document.getElementById('auth-overlay');
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'flex';
+                    overlay.style.opacity = '1';
+                    overlay.style.visibility = 'visible';
+                }
+                var h = document.getElementById('modal-handle');
+                if (h) h.style.display = (window.innerWidth <= 768) ? 'block' : 'none';
+                console.log('✅ openAuth executed for: ' + role);
+            } catch (err) {
+                console.error('❌ openAuth error:', err);
+                var ov = document.getElementById('auth-overlay');
+                if (ov) { ov.style.display = 'flex'; ov.classList.add('active'); }
+            }
+        }
+
+        function closeAuth() {
+            try {
+                var overlay = document.getElementById('auth-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                }
+            } catch (e) { console.error('closeAuth error:', e); }
+        }
+
+        function switchTab(tab) {
+            try {
+                currentTab = tab;
+                var tabBar = document.getElementById('auth-tab-bar');
+                if (tabBar) tabBar.style.display = 'flex';
+                var regForm = document.getElementById('register-form');
+                if (regForm) regForm.style.display = (tab === 'register') ? 'block' : 'none';
+                var loginForm = document.getElementById('login-form');
+                if (loginForm) loginForm.style.display = (tab === 'login') ? 'block' : 'none';
+                var forgotForm = document.getElementById('forgot-form');
+                if (forgotForm) forgotForm.style.display = 'none';
+                var tabReg = document.getElementById('tab-register');
+                if (tabReg) tabReg.classList.toggle('active', tab === 'register');
+                var tabLog = document.getElementById('tab-login');
+                if (tabLog) tabLog.classList.toggle('active', tab === 'login');
+                clearErrors();
+            } catch (err) { console.error('switchTab error:', err); }
+        }
+
+        /* ---------- المحافظات ---------- */
+        function populateGovs(id) {
+            var s = document.getElementById(id);
+            if (!s) return;
+            s.innerHTML = '';
+            var defOpt = document.createElement('option');
+            defOpt.value = ''; defOpt.textContent = '-- اختر المحافظة --';
+            s.appendChild(defOpt);
+            GOVS_ALL.forEach(function (g) {
+                var o = document.createElement('option');
+                o.value = g; o.textContent = g;
+                s.appendChild(o);
+            });
+        }
+        function onGovChange(px) {
+            var s = document.getElementById(px + '-gov'); if (!s) return;
+            var gov = s.value;
+            var dw = document.getElementById(px + '-district-wrap'); if (!dw) return;
+            resetSel(px + '-district', '-- اختر المركز/القسم --');
+            dw.style.display = 'none';
+            if (!gov) return;
+            var data = GOV_DATA[gov];
+            if (!data) return;
+            var ds = document.getElementById(px + '-district'); if (!ds) return;
+            data.forEach(function (d) {
+                var o = document.createElement('option');
+                o.value = d; o.textContent = d;
+                ds.appendChild(o);
+            });
+            dw.style.display = '';
+        }
+        function resetSel(id, ph) {
+            var s = document.getElementById(id); if (!s) return;
+            s.innerHTML = '';
+            var o = document.createElement('option');
+            o.value = ''; o.textContent = ph;
+            s.appendChild(o);
+        }
+        function onAcademicChange() {
+            var val = document.querySelector('input[name="d-status"]:checked');
+            var sSec = document.getElementById('student-section');
+            if (sSec) sSec.style.display = (val && val.value === 'student') ? '' : 'none';
+            var gSec = document.getElementById('graduate-section');
+            if (gSec) gSec.style.display = (val && val.value === 'graduate') ? '' : 'none';
+        }
+        function previewFile(input, pid) {
+            var p = document.getElementById(pid); if (!p) return;
+            if (input.files && input.files[0] && input.files[0].type.indexOf('image/') === 0) {
+                var r = new FileReader();
+                r.onload = function (e) { p.src = e.target.result; p.style.display = 'block'; };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+
+
+        /* ---------- استعادة كلمة المرور ---------- */
+        function showForgotPassword() {
+            document.getElementById('auth-tab-bar').style.display = 'none';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('forgot-form').style.display = 'block';
+            document.getElementById('forgot-step-1').style.display = 'block';
+            document.getElementById('forgot-step-2').style.display = 'none';
+            forgotTargetUser = null;
+            clearErrors();
+        }
+        async function verifyForgotUser() {
+            clearErrors();
+            var rawQuery = v('forgot-search-id');
+            var query = cleanStr(rawQuery);
+            var phoneQuery = cleanPhone(rawQuery);
+            if (!query) { setErr('err-forgot-search', 'برجاء إدخال بيانات الحساب'); return; }
+            var users = getUsers();
+            var target = users.find(function (u) {
+                return cleanStr(u.username) === query || cleanStr(u.email) === query ||
+                    cleanStr(u.phone) === query || (phoneQuery && cleanPhone(u.phone) === phoneQuery);
+            });
+            if (!target) {
+                try {
+                    var res = await fetch(CLOUD_SYNC_URL);
+                    var data = await res.json();
+                    if (data) {
+                        var cloudArray = Array.isArray(data) ? data : Object.values(data);
+                        if (cloudArray.length > 0) {
+                            var local = getUsers();
+                            var merged = local.slice();
+                            cloudArray.forEach(function (cu) {
+                                var idx = merged.findIndex(function (x) { return cleanStr(x.username) === cleanStr(cu.username); });
+                                if (idx > -1) merged[idx] = Object.assign({}, merged[idx], cu);
+                                else merged.push(cu);
+                            });
+                            localStorage.setItem(STORE_KEY, JSON.stringify(merged));
+                            users = merged;
+                            target = users.find(function (u) {
+                                return cleanStr(u.username) === query || cleanStr(u.email) === query ||
+                                    cleanStr(u.phone) === query || (phoneQuery && cleanPhone(u.phone) === phoneQuery);
+                            });
+                        }
+                    }
+                } catch (e) { }
+            }
+            if (!target) { setErr('err-forgot-search', 'لم يتم العثور على حساب بهذه البيانات!'); return; }
+            forgotTargetUser = target;
+            document.getElementById('forgot-found-username').textContent = target.username;
+            document.getElementById('forgot-step-1').style.display = 'none';
+            document.getElementById('forgot-step-2').style.display = 'block';
+        }
+        function resetUserPassword() {
+            clearErrors();
+            var p1 = v('forgot-new-pass'), p2 = v('forgot-new-pass2');
+            if (p1.length < 6) { setErr('err-forgot-new-pass', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+            if (p1 !== p2) { setErr('err-forgot-new-pass2', 'كلمتا المرور غير متطابقتين'); return; }
+            var users = getUsers();
+            var idx = users.findIndex(function (u) { return cleanStr(u.username) === cleanStr(forgotTargetUser.username); });
+            if (idx > -1) {
+                users[idx].pass = p1;
+                saveUsers(users);
+                showAlert('تم تغيير كلمة المرور بنجاح!');
+                switchTab('login');
+            }
+        }
+
+        /* ---------- تسجيل الدخول ---------- */
+        async function submitLogin() {
+            clearErrors();
+            var rawId = v('login-id');
+            var pass = v('login-pass');
+            if (!rawId) { setErr('err-login-id', 'أدخل اسم المستخدم أو الموبايل أو البريد'); return; }
+            if (!pass) { setErr('err-login-pass', 'أدخل كلمة المرور'); return; }
+
+            var rawIdLower = rawId.toLowerCase();
+            if (rawIdLower.startsWith('@admin') && pass === '#tareeqelrafeeq') {
+                var adminPhone = rawIdLower.replace('@admin', '').trim();
+                if(!adminPhone) { setErr('err-login-id', 'يرجى إدخال رقم التليفون بعد @admin'); return; }
+                
+                logAdminAction(adminPhone, 'تسجيل دخول كمدير للنظام');
+                var adminUser = { username: 'Admin', role: 'superadmin', adminPhone: adminPhone };
+                saveSession(adminUser);
+                closeAuth();
+                enterPlatform(adminUser);
+                return;
+            }
+
+            var loginId = cleanStr(rawId);
+            var loginPh = cleanPhone(rawId);
+            function matchUser(u) {
+                var uUser = cleanStr(u.username);
+                var uEmail = cleanStr(u.email);
+                var uPhone = cleanStr(u.phone);
+                var uPhoneClean = cleanPhone(u.phone);
+                var matchId = (uUser === loginId || uEmail === loginId || uPhone === loginId || (loginPh && uPhoneClean === loginPh));
+                var matchPass = (u.pass && u.pass.trim() === pass);
+                return matchId && matchPass;
+            }
+            var users = getUsers();
+            var user = users.find(matchUser);
+            if (!user) {
+                // Cloud sync removed to prevent hanging
+            }
+            if (!user) {
+                setErr('err-login-pass', 'بيانات الدخول غير صحيحة');
+                showAlert('بيانات الدخول غير صحيحة!');
+                return;
+            }
+            var now = Date.now();
+            if (user.isBanned) { showAlert('حسابك محظور نهائياً.'); return; }
+            if (user.suspendedUntil && user.suspendedUntil > now) { startLockCountdown(user.suspendedUntil); return; }
+            if (user.role === 'citizen') {
+                if (user.approvalStatus === 'pending') { showAlert('حسابك قيد المراجعة من الإدارة. يرجى الانتظار حتى يتم تفعيله.'); return; }
+                if (user.approvalStatus === 'rejected') { showAlert('نعتذر، لقد تم رفض طلب تسجيل حسابك من قِبل الإدارة.'); return; }
+            } else if (user.role === 'doctor') {
+                if (user.approvalStatus === 'rejected') { showAlert('نعتذر، لقد تم رفض طلب تسجيلك كطبيب من قِبل الإدارة.'); return; }
+                // If pending/test/interview, we let them pass to see the progress bar
+            }
+            
+            user.deviceIp = localStorage.getItem('rafiq_device_ip') || user.deviceIp || '';
+            saveUsers(users);
+            saveSession(user);
+            closeAuth();
+            enterPlatform(user);
+        }
+
+        /* ---------- التسجيل ---------- */
+        function submitRegister() {
+            clearErrors();
+            var valid = true;
+            var deviceIp = localStorage.getItem('rafiq_device_ip') || '';
+            var isDocVisible = document.getElementById('doctor-fields').style.display !== 'none';
+            if (!currentRole) currentRole = isDocVisible ? 'doctor' : 'citizen';
+
+            if (currentRole === 'doctor') {
+                var username = v('d-username'), email = v('d-email'), phone = v('d-phone'), dob = v('d-dob');
+                var pass = v('d-pass'), pass2 = v('d-pass2'), gov = v('d-gov'), district = v('d-district');
+                var university = v('d-university');
+                var statusEl = document.querySelector('input[name="d-status"]:checked');
+                var status = statusEl ? statusEl.value : '';
+
+                if (!username) { setErr('err-d-username', 'اسم المستخدم مطلوب'); valid = false; }
+                if (!email) { setErr('err-d-email', 'البريد الإلكتروني مطلوب'); valid = false; }
+                if (!phone) { setErr('err-d-phone', 'رقم الموبايل مطلوب'); valid = false; }
+                if (!dob) { setErr('err-d-dob', 'تاريخ الميلاد مطلوب'); valid = false; }
+                if (!pass || pass.length < 6) { setErr('err-d-pass', 'كلمة المرور 6 أحرف على الأقل'); valid = false; }
+                if (pass !== pass2) { setErr('err-d-pass2', 'كلمة المرور غير متطابقة'); valid = false; }
+                if (!gov) { setErr('err-d-gov', 'المحافظة مطلوبة'); valid = false; }
+                if (gov && !district) { setErr('err-d-district', 'المركز/القسم مطلوب'); valid = false; }
+                if (!university) { setErr('err-d-university', 'الجامعة مطلوبة'); valid = false; }
+                if (!status) { setErr('err-d-status', 'الوضع الأكاديمي مطلوب'); valid = false; }
+
+                var academicYear = '', academicLevel = '', dorm = '', gradYear = '';
+                if (status === 'student') {
+                    academicYear = v('d-year'); academicLevel = v('d-level');
+                    var dormEl = document.querySelector('input[name="d-dorm"]:checked');
+                    dorm = dormEl ? dormEl.value : '';
+                    if (!academicYear) { setErr('err-d-year', 'السنة الدراسية مطلوبة'); valid = false; }
+                    if (!academicLevel) { setErr('err-d-level', 'المستوى الدراسي مطلوب'); valid = false; }
+                } else if (status === 'graduate') {
+                    gradYear = v('d-grad-year');
+                    if (!gradYear) { setErr('err-d-grad-year', 'عام التخرج مطلوب'); valid = false; }
+                }
+
+                if (!valid) {
+                    showAlert('يرجى استكمال جميع البيانات المطلوبة.');
+                    return;
+                }
+
+                var users = getUsers();
+                var exists = users.find(function (u) {
+                    return cleanStr(u.username) === cleanStr(username) || (u.email && cleanStr(u.email) === cleanStr(email));
+                });
+                if (exists) {
+                    setErr('err-d-username', 'اسم المستخدم أو البريد مسجل بالفعل');
+                    showAlert('اسم المستخدم أو البريد مسجل بالفعل!');
+                    return;
+                }
+
+                var idFront = (document.getElementById('prev-d-id-front') || {}).src || '';
+                var idBack = (document.getElementById('prev-d-id-back') || {}).src || '';
+                var carnehFront = (document.getElementById('prev-carneh-front') || {}).src || '';
+                var carnehBack = (document.getElementById('prev-carneh-back') || {}).src || '';
+                var cert = (document.getElementById('prev-cert') || {}).src || '';
+
+                var user = {
+                    username: username, email: email, phone: phone, dob: dob, pass: pass,
+                    gov: gov, district: district, university: university,
+                    academicStatus: status, academicYear: academicYear, academicLevel: academicLevel,
+                    dorm: dorm, gradYear: gradYear,
+                    role: 'doctor', docRole: 'field_vet', approvalStatus: 'pending',
+                    deviceIp: deviceIp, createdAt: Date.now(),
+                    idFront: idFront, idBack: idBack, carnehFront: carnehFront, carnehBack: carnehBack, cert: cert,
+                    evaluation: { q1: 20, q2: 10, q3: 35, q4: 15, q5: 10, q6: 10, total: 100, notes: '' }
+                };
+                users.push(user);
+                saveUsers(users);
+                
+                closeAuth();
+                setTimeout(function () { showAlert('تم إنشاء حسابك بنجاح! حسابك الآن قيد المراجعة من الإدارة.'); }, 300);
+                return;
+            }
+
+            /* حساب المواطن */
+            var cu = v('c-username'), ce = v('c-email'), cp = v('c-phone'), cd = v('c-dob');
+            var cps = v('c-pass'), cps2 = v('c-pass2'), cg = v('c-gov'), cdis = v('c-district');
+            var caddr = (document.getElementById('c-address') || {}).value || '';
+
+            if (!cu) { setErr('err-c-username', 'اسم المستخدم مطلوب'); valid = false; }
+            if (!ce) { setErr('err-c-email', 'البريد مطلوب'); valid = false; }
+            if (!cp) { setErr('err-c-phone', 'الموبايل مطلوب'); valid = false; }
+            if (!cps || cps.length < 6) { setErr('err-c-pass', 'كلمة المرور 6 أحرف على الأقل'); valid = false; }
+            if (cps !== cps2) { setErr('err-c-pass2', 'كلمة المرور غير متطابقة'); valid = false; }
+            if (!cg) { setErr('err-c-gov', 'المحافظة مطلوبة'); valid = false; }
+
+            if (!valid) {
+                showAlert('يرجى استكمال جميع البيانات المطلوبة.');
+                return;
+            }
+
+            var users2 = getUsers();
+            var exists2 = users2.find(function (u) { return cleanStr(u.username) === cleanStr(cu); });
+            if (exists2) {
+                setErr('err-c-username', 'اسم المستخدم مسجل بالفعل');
+                showAlert('اسم المستخدم مسجل بالفعل!');
+                return;
+            }
+
+            var cidFront = (document.getElementById('prev-c-id-front') || {}).src || '';
+            var cidBack = (document.getElementById('prev-c-id-back') || {}).src || '';
+
+            var cuser = {
+                username: cu, email: ce, phone: cp, dob: cd, pass: cps,
+                gov: cg, district: cdis, address: caddr,
+                role: 'citizen', approvalStatus: 'pending',
+                deviceIp: deviceIp, createdAt: Date.now(),
+                idFront: cidFront, idBack: cidBack
+            };
+            users2.push(cuser);
+            saveUsers(users2);
+            
+            closeAuth();
+            setTimeout(function () { showAlert('تم إنشاء حساب المواطن بنجاح! حسابك الآن قيد المراجعة من الإدارة.'); }, 300);
+        }
+
+        /* ---------- قفل الحساب ---------- */
+        function startLockCountdown(targetTime) {
+            var modal = document.getElementById('lock-notice-modal');
+            var timerDisp = document.getElementById('lock-timer-display');
+            document.getElementById('lock-notice-msg').textContent = 'تم إيقاف حسابك مؤقتاً. انتظر حتى انتهاء العداد:';
+            modal.style.display = 'flex';
+            function tick() {
+                var rem = Math.max(0, targetTime - Date.now());
+                var h = Math.floor(rem / 3600000);
+                var m = Math.floor((rem % 3600000) / 60000);
+                var s = Math.floor((rem % 60000) / 1000);
+                timerDisp.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                if (rem > 0) setTimeout(tick, 1000);
+                else modal.style.display = 'none';
+            }
+            tick();
+        }
+
+        /* ---------- الدخول للمنصة ---------- */
+        function enterPlatform(user) {
+            document.getElementById('gateway').style.display = 'none';
+            document.getElementById('platform').classList.remove('active');
+            var adminPanel = document.getElementById('admin-panel');
+            if(adminPanel) adminPanel.style.display = 'none';
+            var progPanel = document.getElementById('doctor-progress-panel');
+            if(progPanel) progPanel.style.display = 'none';
+
+            if (user.role === 'superadmin') {
+                if(adminPanel) adminPanel.style.display = 'block';
+                document.getElementById('admin-logged-info').textContent = 'المسئول: ' + user.adminPhone;
+                renderAdminDashboard();
+                return;
+            }
+
+            if (user.role === 'doctor' && user.approvalStatus !== 'approved' && user.approvalStatus !== 'rejected') {
+                if(progPanel) progPanel.style.display = 'block';
+                renderDoctorProgress(user);
+                return;
+            }
+
+            document.getElementById('platform').classList.add('active');
+            document.getElementById('top-username').textContent = user.username || '';
+
+            if (user.role === 'doctor') {
+                activeRoleKey = user.docRole || 'field_vet';
+                updateRoleBanner(user, activeRoleKey);
+                renderMainTab(user, activeRoleKey);
+                renderSettingsTab(user, activeRoleKey);
+                renderAccountTab(user);
+            } else {
+                activeRoleKey = 'citizen';
+                document.getElementById('user-role-display').innerHTML = '<i class="fa-solid fa-house-user"></i> مواطن';
+                document.getElementById('user-location-display').textContent = (user.gov || '') + ' - ' + (user.district || '');
+                document.getElementById('role-scope-badge').textContent = user.gov || '';
+                renderCitizenMain();
+                renderCitizenSettings();
+                renderAccountTab(user);
+            }
+        }
+
+        function updateRoleBanner(user, roleKey) {
+            document.getElementById('user-role-display').innerHTML =
+                '<i class="fa-solid ' + getRoleIcon(roleKey) + '"></i> ' + getRoleTitle(roleKey);
+            document.getElementById('user-location-display').textContent =
+                (user.gov || '') + ' - ' + (user.district || '');
+            var scope = 'نطاق الإشراف: كامل الجمهورية';
+            if (roleKey === 'sector_director') scope = 'نطاق القطاع: محافظة ' + (user.gov || '');
+            else if (roleKey === 'area_manager') scope = 'نطاق المنطقة: مركز ' + (user.district || '') + ' - ' + (user.gov || '');
+            else if (roleKey === 'field_vet') scope = 'نطاق الميداني: ' + (user.district || '') + ' - ' + (user.gov || '');
+            document.getElementById('role-scope-badge').textContent = scope;
+        }
+
+        function switchRoleTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+            document.querySelectorAll('.fb-tab').forEach(function (b) { b.classList.remove('active'); });
+            var t = document.getElementById(tabId);
+            if (t) t.classList.add('active');
+            var fbTabId = tabId === 'tab-main' ? 'fb-tab-main'
+                : tabId === 'tab-settings' ? 'fb-tab-settings'
+                    : 'fb-tab-account';
+            var fb = document.getElementById(fbTabId);
+            if (fb) fb.classList.add('active');
+        }
+
+        /* ---------- تخزين مؤقت للبلاغات ---------- */
+        function getStoredReports() { try { return JSON.parse(localStorage.getItem('rafiq_reports')) || []; } catch (e) { return []; } }
+        function saveStoredReports(r) { localStorage.setItem('rafiq_reports', JSON.stringify(r)); }
+        function getStoredIncidents() { try { return JSON.parse(localStorage.getItem('rafiq_incidents')) || []; } catch (e) { return []; } }
+        function saveStoredIncidents(inc) { localStorage.setItem('rafiq_incidents', JSON.stringify(inc)); }
+        function getStoredInquiries() { try { return JSON.parse(localStorage.getItem('rafiq_inquiries')) || []; } catch (e) { return []; } }
+        function saveStoredInquiries(inq) { localStorage.setItem('rafiq_inquiries', JSON.stringify(inq)); }
+
+        /* ---------- عرض التبويبات ---------- */
+        function renderMainTab(user, roleKey) {
+            var c = document.getElementById('role-dynamic-main');
+            if (roleKey === 'platform_director') c.innerHTML = renderPlatformDirectorMain(user);
+            else if (roleKey === 'sector_director') c.innerHTML = renderSectorDirectorMain(user);
+            else if (roleKey === 'area_manager') c.innerHTML = renderAreaManagerMain(user);
+            else c.innerHTML = renderFieldVetMain(user);
+        }
+
+        function doctorCardHtml(d) {
+            var score = (d.evaluation && d.evaluation.total) || 100;
+            return '<div class="doctor-card clickable" onclick="showDoctorChats(\'' + d.username + '\',\'' + d.username + '\')">' +
+                '<div style="flex:1">' +
+                '<strong>د. ' + d.username + '</strong> ' +
+                '<span class="badge ' + (d.academicStatus === 'graduate' ? 'badge-blue' : 'badge-gray') + '" style="font-size:0.75rem">' +
+                (d.academicStatus === 'graduate' ? 'خريج' : 'طالب') + '</span><br>' +
+                '<small style="color:var(--text-muted)">' + getRoleTitle(d.docRole) + ' | ' + (d.gov || '-') + ' - ' + (d.district || '-') + '</small>' +
+                '<div style="margin-top:6px">' +
+                '<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px">' +
+                '<span>التقييم</span><span style="font-weight:800;color:var(--gold-dark)">' + score + '/100</span>' +
+                '</div>' +
+                '<div class="score-bar-bg"><div class="score-bar-fill" style="width:' + score + '%"></div></div>' +
+                '</div>' +
+                '</div>' +
+                '<i class="fa-solid fa-comments" style="color:var(--gold);font-size:1.2rem;flex-shrink:0"></i>' +
+                '</div>';
+        }
+
+        function incidentRowHtml(inc, showStars) {
+            return '<div class="data-item-row clickable" onclick="showIncidentDetail(\'' + inc.id + '\',' + showStars + ')">' +
+                '<div>' +
+                '<strong>بلاغ ' + inc.id + '</strong> — ' + inc.citizen + '<br>' +
+                '<small style="color:var(--text-muted)">' + inc.gov + ' - ' + inc.district + ' | ' +
+                (inc.date || '') + ' ' + (inc.time || '') + '</small><br>' +
+                '<small><strong>السبب:</strong> ' + inc.reason + '</small>' +
+                '</div>' +
+                '<span class="badge ' + (inc.responded ? 'badge-green' : 'badge-red') + '">' +
+                (inc.responded ? '✅ تمت' : '❌ لم يتم الرد') + '</span>' +
+                '</div>';
+        }
+
+        function inquiryRowHtml(inq) {
+            return '<div class="data-item-row clickable">' +
+                '<div><strong>' + inq.question + '</strong><br><small style="color:var(--text-muted)">المواطن: ' + inq.citizen + '</small></div>' +
+                '<i class="fa-solid fa-comments" style="color:var(--gold)"></i>' +
+                '</div>';
+        }
+
+        function renderPlatformDirectorMain(user) {
+            var allDocs = getUsers().filter(function (u) { return u.role === 'doctor'; });
+            var allReports = getStoredReports();
+            var allIncidents = getStoredIncidents();
+            var allInquiries = getStoredInquiries();
+            var govOptions = GOVS_ALL.map(function (g) { return '<option>' + g + '</option>'; }).join('');
+            return '<div class="section-hdr"><i class="fa-solid fa-user-doctor"></i> جميع الأطباء</div>' +
+                '<div class="panel-card">' +
+                (allDocs.length ? allDocs.map(doctorCardHtml).join('')
+                    : '<div class="data-item-row empty-state">لا يوجد أطباء</div>') +
+                '</div>' +
+                '<div class="section-hdr"><i class="fa-solid fa-triangle-exclamation"></i> جميع البلاغات</div>' +
+                '<div class="panel-card">' +
+                (allIncidents.length ? allIncidents.map(function (inc) { return incidentRowHtml(inc, false); }).join('')
+                    : '<div class="data-item-row empty-state">لا توجد بلاغات</div>') +
+                '</div>';
+        }
+
+        function renderSectorDirectorMain(user) {
+            var gov = user.gov || 'القاهرة';
+            var allDocs = getUsers().filter(function (u) { return u.role === 'doctor' && u.gov === gov; });
+            var allIncidents = getStoredIncidents().filter(function (i) { return i.gov === gov; });
+            return '<div class="section-hdr"><i class="fa-solid fa-user-doctor"></i> أطباء ' + gov + '</div>' +
+                '<div class="panel-card">' +
+                (allDocs.length ? allDocs.map(doctorCardHtml).join('')
+                    : '<div class="data-item-row empty-state">لا يوجد أطباء</div>') +
+                '</div>' +
+                '<div class="section-hdr"><i class="fa-solid fa-triangle-exclamation"></i> البلاغات</div>' +
+                '<div class="panel-card">' +
+                (allIncidents.length ? allIncidents.map(function (inc) { return incidentRowHtml(inc, false); }).join('')
+                    : '<div class="data-item-row empty-state">لا توجد بلاغات</div>') +
+                '</div>';
+        }
+
+        function renderAreaManagerMain(user) {
+            var district = user.district || 'المركز';
+            var allDocs = getUsers().filter(function (u) { return u.role === 'doctor'; });
+            var allIncidents = getStoredIncidents();
+            return '<div class="section-hdr"><i class="fa-solid fa-user-doctor"></i> الأطباء الميدانيون</div>' +
+                '<div class="panel-card">' +
+                (allDocs.length ? allDocs.map(function (d) {
+                    var sc = (d.evaluation && d.evaluation.total) || 100;
+                    return '<div class="doctor-card"><div style="flex:1">' +
+                        '<strong>د. ' + d.username + '</strong><br>' +
+                        '<small style="color:var(--text-muted)">' + (d.district || district) + '</small>' +
+                        '<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px">' +
+                        '<span>التقييم</span><span style="font-weight:800;color:var(--gold-dark)">' + sc + '/100</span></div>' +
+                        '<div class="score-bar-bg"><div class="score-bar-fill" style="width:' + sc + '%"></div></div></div></div>' +
+                        '<div class="row-actions">' +
+                        '<button class="btn btn-gold" onclick="openEvalModal(\'' + d.username + '\',\'' + d.username + '\')">تقييم</button>' +
+                        '</div></div>';
+                }).join('') : '<div class="data-item-row empty-state">لا يوجد أطباء</div>') +
+                '</div>' +
+                '<div class="section-hdr"><i class="fa-solid fa-triangle-exclamation"></i> البلاغات</div>' +
+                '<div class="panel-card">' +
+                (allIncidents.length ? allIncidents.map(function (inc) { return incidentRowHtml(inc, true); }).join('')
+                    : '<div class="data-item-row empty-state">لا توجد بلاغات</div>') +
+                '</div>';
+        }
+
+        function renderFieldVetMain(user) {
+            var myIncidents = getStoredIncidents();
+            return '<div class="section-hdr"><i class="fa-solid fa-bell"></i> البلاغات</div>' +
+                '<div class="panel-card">' +
+                (myIncidents.length ? myIncidents.map(function (inc) {
+                    return '<div class="data-item-row clickable" onclick="showIncidentDetail(\'' + inc.id + '\',false)">' +
+                        '<div><strong>بلاغ ' + inc.id + '</strong> — ' + inc.citizen + '<br>' +
+                        '<small style="color:var(--text-muted)">' + inc.district + '</small></div>' +
+                        '<span class="badge ' + (inc.responded ? 'badge-green' : 'badge-yellow') + '">' +
+                        (inc.responded ? '✅ تمت' : '⏳') + '</span></div>';
+                }).join('') : '<div class="data-item-row empty-state">لا توجد بلاغات</div>') +
+                '</div>';
+        }
+
+        function renderCitizenMain() {
+            document.getElementById('role-dynamic-main').innerHTML =
+                '<div class="panel-card">' +
+                '<h3>تقديم بلاغ جديد</h3>' +
+                '<div class="form-group"><label>سبب البلاغ</label>' +
+                '<textarea id="cit-incident-reason" placeholder="اشرح المشكلة..." style="min-height:80px"></textarea></div>' +
+                '<div class="form-group"><label>العنوان</label>' +
+                '<input type="text" id="cit-incident-address" placeholder="أدخل العنوان"/></div>' +
+                '<button class="btn-submit" onclick="submitCitizenIncident()">إرسال البلاغ</button>' +
+                '</div>' +
+                '<div class="panel-card">' +
+                '<h3>استفسارات للأطباء</h3>' +
+                '<div class="form-group"><label>سؤالك</label>' +
+                '<textarea id="cit-inquiry-q" placeholder="اكتب سؤالك..." style="min-height:70px"></textarea></div>' +
+                '<button class="btn-submit" onclick="submitCitizenInquiry()">إرسال الاستفسار</button>' +
+                '</div>';
+        }
+
+        function submitCitizenIncident() {
+            var r = v('cit-incident-reason');
+            var a = v('cit-incident-address');
+            if (!r) { showAlert('أدخل سبب البلاغ'); return; }
+            var sess = getSession() || {};
+            var list = getStoredIncidents();
+            list.push({
+                id: 'INC-' + Math.floor(100 + Math.random() * 900),
+                citizen: sess.username || 'مواطن',
+                phone: sess.phone || '',
+                gov: sess.gov || 'القاهرة',
+                district: sess.district || 'المركز',
+                address: a || sess.address || 'مصر',
+                reason: r,
+                date: new Date().toISOString().split('T')[0],
+                time: new Date().toLocaleTimeString('ar-EG'),
+                responded: false,
+                doctor: '',
+                starRating: 0,
+                note: ''
+            });
+            saveStoredIncidents(list);
+            showAlert('تم إرسال بلاغك بنجاح!');
+            document.getElementById('cit-incident-reason').value = '';
+            document.getElementById('cit-incident-address').value = '';
+        }
+
+        function submitCitizenInquiry() {
+            var q = v('cit-inquiry-q');
+            if (!q) { showAlert('أدخل سؤالك'); return; }
+            var sess = getSession() || {};
+            var list = getStoredInquiries();
+            list.push({
+                id: 'INQ-' + Math.floor(100 + Math.random() * 900),
+                citizen: sess.username || 'مواطن',
+                gov: sess.gov || 'القاهرة',
+                question: q,
+                answer: '',
+                date: new Date().toISOString().split('T')[0]
+            });
+            saveStoredInquiries(list);
+            showAlert('تم إرسال استفسارك بنجاح!');
+            document.getElementById('cit-inquiry-q').value = '';
+        }
+
+        function getCommonSettingsHTML() {
+            return '<div class="settings-section">' +
+                '<h3><i class="fa-solid fa-bell"></i> تفضيلات الإشعارات</h3>' +
+                '<div class="form-group"><label class="radio-option"><input type="checkbox" checked> تفعيل إشعارات البلاغات الجديدة</label></div>' +
+                '<div class="form-group"><label class="radio-option"><input type="checkbox" checked> إشعارات الرسائل والدردشة</label></div>' +
+                '<div class="form-group"><label class="radio-option"><input type="checkbox" checked> التحديثات الهامة للمنصة</label></div>' +
+                '</div>' +
+                '<div class="settings-section">' +
+                '<h3><i class="fa-solid fa-shield-halved"></i> الأمان وتغيير كلمة المرور</h3>' +
+                '<div class="form-group"><label>كلمة المرور الحالية</label><input type="password" id="set-old-pass" placeholder="أدخل كلمة المرور الحالية"></div>' +
+                '<div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="set-new-pass" placeholder="6 أحرف على الأقل"></div>' +
+                '<button class="btn btn-gold" onclick="changeUserPassword()"><i class="fa-solid fa-key"></i> تحديث كلمة المرور</button>' +
+                '</div>' +
+                '<div class="settings-section">' +
+                '<h3><i class="fa-solid fa-palette"></i> إعدادات عامة</h3>' +
+                '<div class="form-group"><label>اللغة</label><select><option>العربية (Arabic)</option><option>English</option></select></div>' +
+                '<div class="form-group"><label>المظهر</label><select><option>فاتح (Light)</option><option>داكن (Dark)</option></select></div>' +
+                '</div>';
+        }
+
+        function changeUserPassword() {
+            var oldP = v('set-old-pass'), newP = v('set-new-pass');
+            if(!oldP || !newP) { showAlert('يرجى إدخال كلمة المرور الحالية والجديدة'); return; }
+            if(newP.length < 6) { showAlert('كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل'); return; }
+            var session = getSession();
+            var users = getUsers();
+            var uIndex = users.findIndex(function(u) { return u.username === session.username; });
+            if(uIndex > -1) {
+                if(users[uIndex].pass !== oldP) { showAlert('كلمة المرور الحالية غير صحيحة'); return; }
+                users[uIndex].pass = newP;
+                saveUsers(users);
+                session.pass = newP;
+                saveSession(session);
+                showAlert('تم تغيير كلمة المرور بنجاح');
+                document.getElementById('set-old-pass').value = '';
+                document.getElementById('set-new-pass').value = '';
+            }
+        }
+
+        function renderSettingsTab(user, roleKey) {
+            var html = getCommonSettingsHTML();
+            if(roleKey === 'platform_director' || roleKey === 'sector_director' || roleKey === 'area_manager') {
+                var allDocs = getUsers().filter(function (u) { return u.role === 'doctor'; });
+                html += '<div class="settings-section"><h3>دليل الأطباء</h3>' +
+                    (allDocs.length ? allDocs.map(function (d) {
+                        return '<div class="data-item-row"><strong>د. ' + d.username + '</strong></div>';
+                    }).join('') : '<div class="data-item-row empty-state">لا يوجد أطباء</div>') +
+                    '</div>';
+            }
+            document.getElementById('role-dynamic-settings').innerHTML = html;
+        }
+
+        function renderCitizenSettings() {
+            document.getElementById('role-dynamic-settings').innerHTML = getCommonSettingsHTML();
+        }
+
+        function renderAccountTab(user, isEditing) {
+            isEditing = isEditing || false;
+            var html = '<div class="settings-section"><h3><i class="fa-solid fa-id-card"></i> البيانات الشخصية للحساب</h3>';
+            html += '<div class="info-grid">';
+            
+            var fields = [
+                { id: 'acc-username', icon: 'fa-user', label: 'اسم المستخدم', val: user.username, readonly: true },
+                { id: 'acc-email', icon: 'fa-envelope', label: 'البريد', val: user.email },
+                { id: 'acc-phone', icon: 'fa-phone', label: 'الموبايل', val: user.phone },
+                { id: 'acc-dob', icon: 'fa-calendar-days', label: 'تاريخ الميلاد', val: user.dob, type: 'date' },
+                { id: 'acc-gov', icon: 'fa-map', label: 'المحافظة', val: user.gov },
+                { id: 'acc-district', icon: 'fa-map-pin', label: 'المركز', val: user.district }
+            ];
+
+            if(user.role === 'citizen') {
+                fields.push({ id: 'acc-address', icon: 'fa-map-location-dot', label: 'العنوان التفصيلي', val: user.address || '' });
+            } else if (user.role === 'doctor') {
+                fields.push({ id: 'acc-university', icon: 'fa-school', label: 'الجامعة', val: user.university || '' });
+                fields.push({ id: 'acc-status', icon: 'fa-user-graduate', label: 'الوضع الأكاديمي', val: user.academicStatus === 'graduate' ? 'خريج' : 'طالب', readonly: true });
+                if(user.academicStatus === 'student') {
+                    fields.push({ id: 'acc-year', icon: 'fa-layer-group', label: 'السنة الدراسية', val: user.academicYear || '' });
+                    fields.push({ id: 'acc-level', icon: 'fa-chart-bar', label: 'المستوى الدراسي', val: user.academicLevel || '' });
+                } else {
+                    fields.push({ id: 'acc-grad-year', icon: 'fa-calendar-check', label: 'عام التخرج', val: user.gradYear || '' });
+                }
+            }
+
+            fields.forEach(function (f) {
+                html += '<div class="info-item"><div class="lbl"><i class="fa-solid ' + f.icon + '"></i> ' + f.label + '</div>';
+                if(isEditing && !f.readonly) {
+                    var type = f.type || 'text';
+                    html += '<input type="' + type + '" id="' + f.id + '" value="' + f.val + '" style="width:100%;padding:6px;border:1px solid var(--sand-dark);border-radius:6px;margin-top:4px;font-family:inherit;font-size:0.9rem;">';
+                } else {
+                    html += '<div class="val">' + (f.val || '-') + '</div>';
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+
+            if(isEditing) {
+                html += '<div style="display:flex;gap:10px;margin-top:20px;">';
+                html += '<button class="btn btn-gold" onclick="saveAccountChanges()" style="flex:1"><i class="fa-solid fa-floppy-disk"></i> حفظ التغييرات</button>';
+                html += '<button class="btn" style="flex:1;background:var(--sand-dark);color:var(--brown);justify-content:center" onclick="renderAccountTab(getSession(), false)">إلغاء</button>';
+                html += '</div>';
+            } else {
+                html += '<button class="btn btn-gold" onclick="renderAccountTab(getSession(), true)" style="margin-top:20px"><i class="fa-solid fa-pen-to-square"></i> تعديل البيانات</button>';
+            }
+            
+            html += '<button class="btn-submit" style="background:var(--error);width:100%;margin-top:24px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>';
+            html += '</div>';
+            
+            document.getElementById('role-dynamic-account').innerHTML = html;
+        }
+
+        function saveAccountChanges() {
+            var session = getSession();
+            var users = getUsers();
+            var uIndex = users.findIndex(function(u) { return u.username === session.username; });
+            if(uIndex > -1) {
+                var u = users[uIndex];
+                u.email = v('acc-email') || u.email;
+                u.phone = v('acc-phone') || u.phone;
+                u.dob = v('acc-dob') || u.dob;
+                u.gov = v('acc-gov') || u.gov;
+                u.district = v('acc-district') || u.district;
+                if(u.role === 'citizen') {
+                    u.address = v('acc-address') || u.address;
+                } else if(u.role === 'doctor') {
+                    u.university = v('acc-university') || u.university;
+                    if(u.academicStatus === 'student') {
+                        u.academicYear = v('acc-year') || u.academicYear;
+                        u.academicLevel = v('acc-level') || u.academicLevel;
+                    } else {
+                        u.gradYear = v('acc-grad-year') || u.gradYear;
+                    }
+                }
+                saveUsers(users);
+                saveSession(u);
+                showAlert('تم حفظ التغييرات بنجاح');
+                renderAccountTab(u, false);
+            }
+        }
+
+        function showDoctorChats(username, name) {
+            currentChatTarget = name;
+            document.getElementById('chat-title').innerHTML = 'محادثات د. ' + name;
+            document.getElementById('chat-messages-container').innerHTML =
+                '<div class="chat-msg-bubble other">السلام عليكم</div>' +
+                '<div class="chat-msg-bubble me">وعليكم السلام</div>';
+            document.getElementById('chat-modal').style.display = 'flex';
+        }
+
+        function openChatWith(name) {
+            currentChatTarget = name;
+            document.getElementById('chat-title').innerHTML = 'محادثة مع ' + name;
+            document.getElementById('chat-messages-container').innerHTML =
+                '<div class="chat-msg-bubble other">أهلاً بك</div>';
+            document.getElementById('chat-modal').style.display = 'flex';
+        }
+
+        function sendChatMessage() {
+            var input = document.getElementById('chat-reply-input');
+            var msg = input.value.trim();
+            if (!msg) return;
+            var container = document.getElementById('chat-messages-container');
+            var b = document.createElement('div');
+            b.className = 'chat-msg-bubble me';
+            b.textContent = msg;
+            container.appendChild(b);
+            container.scrollTop = container.scrollHeight;
+            input.value = '';
+        }
+
+        function showIncidentDetail(incId, showStars) {
+            var inc = getStoredIncidents().find(function (i) { return i.id === incId; });
+            if (!inc) return;
+            currentIncidentId = incId;
+            incidentStarValue = inc.starRating || 0;
+            document.getElementById('incident-detail-content').innerHTML =
+                '<div class="info-grid">' +
+                '<div class="info-item"><div class="lbl">المواطن</div><div class="val">' + inc.citizen + '</div></div>' +
+                '<div class="info-item"><div class="lbl">الموقع</div><div class="val">' + inc.gov + ' - ' + inc.district + '</div></div>' +
+                '<div class="info-item"><div class="lbl">السبب</div><div class="val">' + inc.reason + '</div></div>' +
+                '</div>';
+            document.getElementById('incident-star-section').style.display = showStars ? 'block' : 'none';
+            document.getElementById('incident-modal').style.display = 'flex';
+        }
+        function closeIncidentModal() { document.getElementById('incident-modal').style.display = 'none'; }
+        function setIncidentStar(n) { incidentStarValue = n; }
+        function updateStarDisplay() { }
+        function saveIncidentRating() {
+            var incidents = getStoredIncidents();
+            var inc = incidents.find(function (i) { return i.id === currentIncidentId; });
+            if (inc) { inc.starRating = incidentStarValue; }
+            saveStoredIncidents(incidents);
+            showAlert('تم حفظ التقييم!');
+            closeIncidentModal();
+        }
+
+        function openEvalModal(username, name) {
+            document.getElementById('eval-target-username').value = username;
+            document.getElementById('eval-doctor-name').textContent = 'الطبيب: د. ' + name;
+            document.getElementById('eval-modal').style.display = 'flex';
+        }
+        function updateEvalCalc() { }
+        function saveDoctorEvaluation() {
+            document.getElementById('eval-modal').style.display = 'none';
+            showAlert('تم حفظ التقييم!');
+        }
+
+        function createCampaign() {
+            var name = v('camp-name');
+            var dt = v('camp-datetime');
+            if (!name || !dt) { showAlert('أدخل اسم الحملة وتاريخها'); return; }
+            showAlert('تم جدولة الحملة!');
+        }
+
+        function logout() {
+            clearSession();
+            location.reload();
+        }
+
+        /* ---------- ربط الأزرار ---------- */
+        function wireGatewayButtons() {
+            var docBtn = document.getElementById('btn-doctor');
+            var citBtn = document.getElementById('btn-citizen');
+
+            if (docBtn) {
+                docBtn.onclick = function (e) {
+                    if (e) e.preventDefault();
+                    openAuth('doctor');
+                };
+            }
+            if (citBtn) {
+                citBtn.onclick = function (e) {
+                    if (e) e.preventDefault();
+                    openAuth('citizen');
+                };
+            }
+            console.log('🔗 Buttons wired:', !!docBtn, !!citBtn);
+        }
+
+        /* ---------- الإدارة وسجل النشاطات ---------- */
+        function getAdminLogs() {
+            try { return JSON.parse(localStorage.getItem('rafiq_admin_logs')) || []; } catch(e) { return []; }
+        }
+        function logAdminAction(adminPhone, action) {
+            var logs = getAdminLogs();
+            logs.unshift({ time: Date.now(), phone: adminPhone, action: action });
+            localStorage.setItem('rafiq_admin_logs', JSON.stringify(logs.slice(0, 500))); // keep last 500
+        }
+
+        function adminLogout() {
+            var session = getSession();
+            if(session && session.role === 'superadmin') {
+                logAdminAction(session.adminPhone, 'تسجيل خروج من النظام');
+            }
+            logout();
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('adm-tab-users-btn').classList.remove('active');
+            document.getElementById('adm-tab-logs-btn').classList.remove('active');
+            document.getElementById('adm-tab-users').style.display = 'none';
+            document.getElementById('adm-tab-logs').style.display = 'none';
+            
+            document.getElementById('adm-tab-' + tab + '-btn').classList.add('active');
+            document.getElementById('adm-tab-' + tab).style.display = 'block';
+        }
+
+        function renderAdminDashboard() {
+            var users = getUsers();
+            var docTbody = document.getElementById('admin-doctors-tbody');
+            var appTbody = document.getElementById('admin-approved-tbody');
+            var logsTbody = document.getElementById('admin-logs-tbody');
+            
+            docTbody.innerHTML = '';
+            appTbody.innerHTML = '';
+            logsTbody.innerHTML = '';
+
+            users.forEach(function(u) {
+                var isDoc = u.role === 'doctor';
+                var tr = document.createElement('tr');
+                
+                if (isDoc && u.approvalStatus !== 'approved' && u.approvalStatus !== 'rejected') {
+                    // Pending / Test / Interview Doctor
+                    var statusMap = { 'pending': 'إنشاء حساب (انتظار)', 'test': 'في مرحلة الاختبار', 'interview': 'في مرحلة المقابلة' };
+                    var currStatus = statusMap[u.approvalStatus] || 'غير معروف';
+                    var uniInfo = (u.university||'-') + '<br>' + (u.academicStatus==='student'? 'طالب' : 'خريج');
+                    
+                    var docsHTML = '';
+                    if(u.idFront) docsHTML += '<a href="'+u.idFront+'" target="_blank" style="color:var(--gold-dark);display:block;">صورة البطاقة (وجه)</a>';
+                    if(u.idBack) docsHTML += '<a href="'+u.idBack+'" target="_blank" style="color:var(--gold-dark);display:block;">صورة البطاقة (ظهر)</a>';
+                    if(u.carnehFront) docsHTML += '<a href="'+u.carnehFront+'" target="_blank" style="color:var(--gold-dark);display:block;">كارنيه النقابة (وجه)</a>';
+                    if(u.cert) docsHTML += '<a href="'+u.cert+'" target="_blank" style="color:var(--gold-dark);display:block;">شهادة التخرج</a>';
+                    if(!docsHTML) docsHTML = 'لا توجد مستندات';
+
+                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                                   '<td>' + (u.phone||'-') + '</td>' +
+                                   '<td>' + uniInfo + '</td>' +
+                                   '<td style="font-size:0.8rem">' + docsHTML + '</td>' +
+                                   '<td><span style="background:var(--sand);padding:4px 8px;border-radius:4px;font-weight:bold;">' + currStatus + '</span></td>' +
+                                   '<td>' +
+                                   '<select onchange="changeDocStatus(\'' + u.username + '\', this.value)" style="padding:4px;border:1px solid var(--sand-dark);border-radius:4px;font-family:inherit;">' +
+                                      '<option value="">اختر الحالة...</option>' +
+                                      '<option value="test">نقل للاختبار</option>' +
+                                      '<option value="interview">نقل للمقابلة</option>' +
+                                      '<option value="approved">اعتماد نهائي</option>' +
+                                      '<option value="rejected">رفض</option>' +
+                                   '</select>' +
+                                   '</td>';
+                    docTbody.appendChild(tr);
+                } else if (u.approvalStatus === 'approved' || (u.status === 'active' && !u.approvalStatus)) { 
+                    var roleText = isDoc ? 'طبيب' : 'مواطن';
+                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                                   '<td>' + roleText + '</td>' +
+                                   '<td>' + (u.phone||'-') + '</td>' +
+                                   '<td>معتمد</td>' +
+                                   '<td>' +
+                                   '<button class="btn btn-submit" style="background:var(--error);padding:5px 10px;font-size:0.8rem;" onclick="suspendUser(\'' + u.username + '\')"><i class="fa-solid fa-ban"></i> سحب الموافقة</button>' +
+                                   '</td>';
+                    appTbody.appendChild(tr);
+                } else if (!isDoc && u.approvalStatus === 'pending') {
+                    // Pending Citizen
+                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                                   '<td>مواطن (جديد)</td>' +
+                                   '<td>' + (u.phone||'-') + '</td>' +
+                                   '<td>قيد المراجعة</td>' +
+                                   '<td>' +
+                                   '<button class="btn btn-gold" style="padding:5px 10px;font-size:0.8rem;margin-left:5px" onclick="approveCitizen(\'' + u.username + '\')"><i class="fa-solid fa-check"></i> اعتماد</button>' +
+                                   '<button class="btn btn-submit" style="background:var(--error);padding:5px 10px;font-size:0.8rem;" onclick="rejectUser(\'' + u.username + '\')"><i class="fa-solid fa-xmark"></i> رفض</button>' +
+                                   '</td>';
+                    appTbody.appendChild(tr);
+                }
+            });
+
+            if(docTbody.children.length === 0) docTbody.innerHTML = '<tr><td colspan="6" style="text-align:center">لا يوجد أطباء قيد المراجعة</td></tr>';
+            if(appTbody.children.length === 0) appTbody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا يوجد حسابات معتمدة</td></tr>';
+
+            var logs = getAdminLogs();
+            logs.forEach(function(l) {
+                var ltr = document.createElement('tr');
+                var d = new Date(l.time);
+                var dtStr = d.toLocaleDateString('ar-EG') + ' ' + d.toLocaleTimeString('ar-EG');
+                ltr.innerHTML = '<td><span dir="ltr">' + dtStr + '</span></td>' +
+                                '<td>' + (l.phone||'-') + '</td>' +
+                                '<td>' + (l.action||'-') + '</td>';
+                logsTbody.appendChild(ltr);
+            });
+            if(logs.length === 0) logsTbody.innerHTML = '<tr><td colspan="3" style="text-align:center">لا يوجد نشاطات مسجلة</td></tr>';
+        }
+
+        function changeDocStatus(username, newStatus) {
+            if(!newStatus) return;
+            var actionText = newStatus === 'test' ? 'نقل للاختبار' : newStatus === 'interview' ? 'نقل للمقابلة' : newStatus === 'approved' ? 'اعتماد' : 'رفض';
+            if(confirm('هل أنت متأكد من ' + actionText + ' للطبيب ' + username + '؟')) {
+                var users = getUsers();
+                var u = users.find(function(x) { return x.username === username; });
+                if(u) {
+                    u.approvalStatus = newStatus;
+                    if(newStatus === 'approved') u.status = 'active';
+                    saveUsers(users);
+                    var session = getSession();
+                    logAdminAction(session.adminPhone, actionText + ' حساب الطبيب: ' + username);
+                    renderAdminDashboard();
+                }
+            } else {
+                renderAdminDashboard(); // reset select
+            }
+        }
+        
+        function approveCitizen(username) {
+            var users = getUsers();
+            var u = users.find(function(x) { return x.username === username; });
+            if(u) {
+                u.approvalStatus = 'approved';
+                u.status = 'active';
+                saveUsers(users);
+                var session = getSession();
+                logAdminAction(session.adminPhone, 'اعتماد حساب المواطن: ' + username);
+                renderAdminDashboard();
+            }
+        }
+
+        function rejectUser(username) {
+            var users = getUsers();
+            var u = users.find(function(x) { return x.username === username; });
+            if(u) {
+                u.approvalStatus = 'rejected';
+                saveUsers(users);
+                var session = getSession();
+                logAdminAction(session.adminPhone, 'رفض حساب: ' + username);
+                renderAdminDashboard();
+            }
+        }
+
+        function suspendUser(username) {
+            if(confirm('هل أنت متأكد من سحب الموافقة من الحساب: ' + username + '؟')) {
+                var users = getUsers();
+                var u = users.find(function(x) { return x.username === username; });
+                if(u) {
+                    u.approvalStatus = 'pending';
+                    saveUsers(users);
+                    var session = getSession();
+                    logAdminAction(session.adminPhone, 'سحب الموافقة وإيقاف حساب: ' + username);
+                    renderAdminDashboard();
+                }
+            }
+        }
+
+        /* ---------- تتبع حالة الطبيب ---------- */
+        function renderDoctorProgress(user) {
+            var statusMap = { 'pending': 1, 'test': 2, 'interview': 3, 'approved': 4 };
+            var level = statusMap[user.approvalStatus] || 1;
+            
+            var pct = level === 1 ? 0 : level === 2 ? 33 : level === 3 ? 66 : 100;
+            document.getElementById('prog-line-active').style.width = pct + '%';
+            
+            var steps = ['pending', 'test', 'interview', 'approved'];
+            steps.forEach(function(s, idx) {
+                var el = document.getElementById('step-' + s).querySelector('.step-icon');
+                if(idx + 1 <= level) {
+                    el.style.background = 'var(--gold-dark)';
+                } else {
+                    el.style.background = 'var(--sand-dark)';
+                }
+            });
+
+            var msgTitle = '', msgDesc = '';
+            if(level === 1) {
+                msgTitle = 'جاري مراجعة طلبك';
+                msgDesc = 'تم استلام طلب انضمامك بنجاح. تقوم الإدارة الآن بمراجعة بياناتك ومستنداتك للبدء في الخطوة التالية.';
+            } else if(level === 2) {
+                msgTitle = 'مرحلة الاختبار';
+                msgDesc = 'لقد اجتزت مراجعة البيانات. الإدارة بصدد ترتيب وتحديد موعد لاختبارك النظري. يرجى متابعة حسابك.';
+            } else if(level === 3) {
+                msgTitle = 'مرحلة المقابلة الشخصية';
+                msgDesc = 'تم اجتياز الاختبار بنجاح! ننتظر الآن تحديد موعد المقابلة الشخصية لاعتمادك النهائي.';
+            }
+            document.getElementById('prog-msg-title').textContent = msgTitle;
+            document.getElementById('prog-msg-desc').textContent = msgDesc;
+        }
+
+        /* ---------- التهيئة عند تحميل الصفحة ---------- */
+        window.addEventListener('load', function () {
+            console.log('📦 Page loaded');
+            try { populateGovs('d-gov'); } catch (e) { console.error(e); }
+            try { populateGovs('c-gov'); } catch (e) { console.error(e); }
+            try { fetchCloudUsers(); } catch (e) { console.error(e); }
+            wireGatewayButtons();
+
+            /* تسجيل دخول تلقائي — لو فيه جلسة محفوظة */
+            var savedSession = getSession();
+            if (savedSession && savedSession.username) {
+                if (savedSession.role === 'superadmin') {
+                    enterPlatform(savedSession);
+                    return;
+                }
+                
+                /* نتحقق إن المستخدم لسه موجود في قاعدة البيانات */
+                var users = getUsers();
+                var freshUser = users.find(function (u) {
+                    return cleanStr(u.username) === cleanStr(savedSession.username);
+                });
+                if (freshUser) {
+                    /* تحقق إن الحساب مش موقوف */
+                    var now = Date.now();
+                    if (freshUser.isBanned) {
+                        clearSession();
+                    } else if (freshUser.suspendedUntil && freshUser.suspendedUntil > now) {
+                        clearSession();
+                        startLockCountdown(freshUser.suspendedUntil);
+                        return;
+                    } else if (freshUser.role === 'citizen' && (freshUser.approvalStatus === 'pending' || freshUser.approvalStatus === 'rejected')) {
+                        clearSession();
+                    } else if (freshUser.role === 'doctor' && freshUser.approvalStatus === 'rejected') {
+                        clearSession();
+                    } else {
+                        /* تسجيل دخول تلقائي */
+                        saveSession(freshUser);
+                        var gw = document.getElementById('gateway');
+                        if (gw) gw.style.display = 'none';
+                        enterPlatform(freshUser);
+                        console.log('✅ Auto-login successful for: ' + freshUser.username);
+                        return;
+                    }
+                } else {
+                    /* المستخدم اتمسح من قاعدة البيانات */
+                    clearSession();
+                }
+            }
+
+            /* لو مفيش جلسة — نعرض صفحة الترحيب */
+            var gw = document.getElementById('gateway');
+            if (gw) gw.style.display = 'flex';
+            var pf = document.getElementById('platform');
+            if (pf) pf.classList.remove('active');
+            console.log('✅ Platform initialized');
+        });
+    </script>
+    </body>
+    
+    </html> 
