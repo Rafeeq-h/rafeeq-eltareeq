@@ -33,14 +33,37 @@
             --success: #27ae60;
             --warning: #e67e22;
             --shadow: 0 4px 24px rgba(92, 61, 30, 0.13);
-            --radius: 14px
+            --radius: 14px;
+            --bg-page: #f5efe6;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+            --border-color: #e8dccf
+        }
+
+        /* === DARK MODE === */
+        body.dark-mode {
+            --gold: #d4a96e;
+            --gold-dark: #e8c07a;
+            --sand: #1e1610;
+            --sand-dark: #2a1f14;
+            --brown: #d4a96e;
+            --brown-light: #c8a96e;
+            --white: #1a140d;
+            --text: #f0e4d0;
+            --text-muted: #b09878;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+            --bg-page: #121010;
+            --card-bg: #1e1814;
+            --input-bg: #2a2018;
+            --border-color: #3a2d1e
         }
 
         body {
             font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
             background: var(--sand);
             color: var(--text);
-            min-height: 100vh
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease
         }
 
         /* GATEWAY */
@@ -1026,6 +1049,115 @@
                 font-size: 0.8rem
             }
         }
+
+        /* === DARK MODE ELEMENT OVERRIDES === */
+        body.dark-mode #gateway {
+            background: linear-gradient(135deg, #0d0a06 0%, #1e1610 50%, #3a2d1e 100%)
+        }
+        body.dark-mode .auth-modal {
+            background: #1e1814;
+            color: var(--text)
+        }
+        body.dark-mode .auth-modal h2 { color: var(--gold-dark) }
+        body.dark-mode .auth-tab { background: #2a2018; color: var(--text-muted) }
+        body.dark-mode .auth-tab.active { background: var(--gold); color: #1a140d }
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select,
+        body.dark-mode .form-group textarea {
+            background: #2a2018;
+            color: var(--text);
+            border-color: #3a2d1e
+        }
+        body.dark-mode .form-group label { color: var(--text-muted) }
+        body.dark-mode .topbar {
+            background: linear-gradient(90deg, #1e1610 0%, #2a1f14 100%)
+        }
+        body.dark-mode .fb-nav-tabs {
+            background: #1e1814;
+            border-top-color: #3a2d1e
+        }
+        body.dark-mode .fb-tab { color: var(--text-muted) }
+        body.dark-mode .fb-tab.active { color: var(--gold-dark) }
+        body.dark-mode .panel-card,
+        body.dark-mode .settings-section,
+        body.dark-mode .alert-box,
+        body.dark-mode .doctor-card,
+        body.dark-mode .data-item-row {
+            background: #1e1814;
+            border-color: #3a2d1e
+        }
+        body.dark-mode .role-header-banner {
+            background: #2a1f14 !important;
+            border-color: #3a2d1e
+        }
+        body.dark-mode table { color: var(--text) }
+        body.dark-mode thead tr { background: #2a2018 !important }
+        body.dark-mode th, body.dark-mode td {
+            border-color: #3a2d1e !important;
+            color: var(--text)
+        }
+        body.dark-mode tr:hover { background: #2a2018 }
+        body.dark-mode .btn { border-color: #3a2d1e }
+        body.dark-mode #lock-notice-modal > div,
+        body.dark-mode #alert-modal > div,
+        body.dark-mode #doctor-detail-modal > .alert-box {
+            background: #1e1814
+        }
+        body.dark-mode #auth-overlay { background: rgba(0,0,0,0.75) }
+        body.dark-mode .dashboard { background: transparent }
+        body.dark-mode .tab-pane { background: transparent }
+        body.dark-mode #doctor-progress-panel { background: #121010; color: var(--text) }
+        body.dark-mode .score-bar-bg { background: #3a2d1e }
+        body.dark-mode .badge-gray { background: #3a2d1e; color: var(--text-muted) }
+        body.dark-mode .info-item { border-color: #3a2d1e }
+        body.dark-mode .info-item .lbl { color: var(--text-muted) }
+        body.dark-mode .info-item .val { color: var(--text) }
+        body.dark-mode select option { background: #2a2018; color: var(--text) }
+
+        /* Dark mode toggle switch style */
+        .dark-toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+        }
+        .dark-toggle-label {
+            font-size: 0.97rem;
+            font-weight: 600;
+            color: var(--text);
+            flex: 1;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--sand-dark);
+            border-radius: 34px;
+            transition: 0.3s;
+        }
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background: var(--brown);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: var(--gold) }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background: #1a140d;
+        }
     </style>
 </head>
 
@@ -1034,14 +1166,14 @@
     <!-- GATEWAY -->
     <div id="gateway">
         <div class="logo-wrap">
-            <img class="logo-img" id="logo-img" src="" alt="رفيق الطريق" onerror="this.style.display='none'" />
+            <img class="logo-img" id="logo-img" src="logo.jpg" alt="رفيق الطريق" />
             <div class="logo-title">رفيق الطريق</div>
             <div class="logo-sub">معاً لبيئة آمنة للإنسان والحيوان</div>
         </div>
         <div class="gw-btns">
-            <button type="button" class="gw-btn doctor" id="btn-doctor"><i class="fa-solid fa-stethoscope"></i> طبيب
+            <button type="button" class="gw-btn doctor" id="btn-doctor" onclick="openAuth('doctor')"><i class="fa-solid fa-stethoscope"></i> طبيب
                 بيطري</button>
-            <button type="button" class="gw-btn citizen" id="btn-citizen"><i class="fa-solid fa-house-user"></i>
+            <button type="button" class="gw-btn citizen" id="btn-citizen" onclick="openAuth('citizen')"><i class="fa-solid fa-house-user"></i>
                 مواطن</button>
         </div>
     </div>
@@ -1478,7 +1610,7 @@
     <!-- PLATFORM -->
     <div id="platform">
         <div class="topbar">
-            <div class="brand"><img id="top-logo" src="" alt="" onerror="this.style.display='none'"
+            <div class="brand"><img id="top-logo" src="logo.jpg" alt="رفيق الطريق"
                     style="height:32px;border-radius:50%;margin-left:8px" /> رفيق الطريق</div>
             <div style="display:flex;align-items:center;gap:12px">
                 <span style="font-size:0.93rem;color:#f5deb3" id="top-username"></span>
@@ -1549,8 +1681,7 @@
                             <tr style="background:var(--sand);color:var(--brown);">
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الاسم</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">رقم الهاتف</th>
-                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الجامعة/المرحلة</th>
-                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">المستندات</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الجامعة</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الحالة الحالية</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">تغيير الحالة</th>
                             </tr>
@@ -1569,7 +1700,7 @@
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الاسم</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">النوع</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">رقم الهاتف</th>
-                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الحالة</th>
+                                <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">المحافظة</th>
                                 <th style="padding:10px;border-bottom:1px solid var(--sand-dark)">الإجراء</th>
                             </tr>
                         </thead>
@@ -1634,6 +1765,8 @@
             <button class="btn btn-submit" style="background:var(--error);max-width:200px;margin:0 auto;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
         </div>
     </div>
+
+    <script>
         /* ============================================================
            رفيق الطريق — السكربت الكامل
            ============================================================ */
@@ -1773,6 +1906,12 @@
                 if (dFields) dFields.style.display = isDoc ? 'block' : 'none';
                 var cFields = document.getElementById('citizen-fields');
                 if (cFields) cFields.style.display = isDoc ? 'none' : 'block';
+                
+                try {
+                    if (isDoc) { populateGovs('d-gov'); }
+                    else { populateGovs('c-gov'); }
+                } catch (eg) {}
+
                 switchTab('register');
                 var overlay = document.getElementById('auth-overlay');
                 if (overlay) {
@@ -1952,10 +2091,12 @@
             if (!rawId) { setErr('err-login-id', 'أدخل اسم المستخدم أو الموبايل أو البريد'); return; }
             if (!pass) { setErr('err-login-pass', 'أدخل كلمة المرور'); return; }
 
-            var rawIdLower = rawId.toLowerCase();
-            if (rawIdLower.startsWith('@admin') && pass === '#tareeqelrafeeq') {
-                var adminPhone = rawIdLower.replace('@admin', '').trim();
-                if(!adminPhone) { setErr('err-login-id', 'يرجى إدخال رقم التليفون بعد @admin'); return; }
+            var rawIdLower = rawId.toLowerCase().trim();
+            var passClean = pass.toLowerCase().replace(/\s+/g, '');
+            // الدخول ك أدمن عبر نافذة الطبيب: رقم التليفون يبدأ بـ @admin والباسوورد هو #tareeqelrafeeq بالظبط
+            if (rawIdLower.startsWith('@admin') && passClean === '#tareeqelrafeeq') {
+                var adminPhone = rawId.substring(rawIdLower.indexOf('@admin') + 6).trim(); // استخراج رقم التليفون
+                if (!adminPhone) { setErr('err-login-id', 'يرجى كتابة رقم التليفون بعد @admin مباشرة (مثال: @admin01012345678)'); return; }
                 
                 logAdminAction(adminPhone, 'تسجيل دخول كمدير للنظام');
                 var adminUser = { username: 'Admin', role: 'superadmin', adminPhone: adminPhone };
@@ -2401,6 +2542,7 @@
         }
 
         function getCommonSettingsHTML() {
+            var isDark = localStorage.getItem('rafiq_dark_mode') === '1';
             return '<div class="settings-section">' +
                 '<h3><i class="fa-solid fa-bell"></i> تفضيلات الإشعارات</h3>' +
                 '<div class="form-group"><label class="radio-option"><input type="checkbox" checked> تفعيل إشعارات البلاغات الجديدة</label></div>' +
@@ -2414,9 +2556,16 @@
                 '<button class="btn btn-gold" onclick="changeUserPassword()"><i class="fa-solid fa-key"></i> تحديث كلمة المرور</button>' +
                 '</div>' +
                 '<div class="settings-section">' +
-                '<h3><i class="fa-solid fa-palette"></i> إعدادات عامة</h3>' +
+                '<h3><i class="fa-solid fa-palette"></i> المظهر والتخصيص</h3>' +
+                '<div class="dark-toggle-wrap">' +
+                '<i class="fa-solid fa-moon" style="font-size:1.3rem;color:var(--gold-dark)"></i>' +
+                '<span class="dark-toggle-label">الوضع الداكن (Dark Mode)</span>' +
+                '<label class="toggle-switch">' +
+                '<input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode(this.checked)" ' + (isDark ? 'checked' : '') + '>' +
+                '<span class="toggle-slider"></span>' +
+                '</label>' +
+                '</div>' +
                 '<div class="form-group"><label>اللغة</label><select><option>العربية (Arabic)</option><option>English</option></select></div>' +
-                '<div class="form-group"><label>المظهر</label><select><option>فاتح (Light)</option><option>داكن (Dark)</option></select></div>' +
                 '</div>';
         }
 
@@ -2643,9 +2792,11 @@
             try { return JSON.parse(localStorage.getItem('rafiq_admin_logs')) || []; } catch(e) { return []; }
         }
         function logAdminAction(adminPhone, action) {
-            var logs = getAdminLogs();
-            logs.unshift({ time: Date.now(), phone: adminPhone, action: action });
-            localStorage.setItem('rafiq_admin_logs', JSON.stringify(logs.slice(0, 500))); // keep last 500
+            try {
+                var logs = getAdminLogs();
+                logs.unshift({ time: Date.now(), phone: adminPhone, action: action });
+                localStorage.setItem('rafiq_admin_logs', JSON.stringify(logs.slice(0, 500))); // keep last 500
+            } catch (e) { console.error('logAdminAction error:', e); }
         }
 
         function adminLogout() {
@@ -2676,30 +2827,61 @@
             appTbody.innerHTML = '';
             logsTbody.innerHTML = '';
 
+            function buildDetailsRow(u, cols) {
+                var isDoc = u.role === 'doctor';
+                var dob = u.dob || '-';
+                var email = u.email || '-';
+                var gov = u.gov || '-';
+                var dist = u.district || '-';
+                var regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('ar-EG') : '-';
+
+                var docExtra = '';
+                if (isDoc) {
+                    docExtra = '<tr style="background:#fffaf3;"><td colspan="' + cols + '" style="padding:12px 18px;font-size:0.85rem;border-bottom:2px solid var(--sand-dark);">' +
+                        '<b>📋 البيانات التفصيلية:</b><br>' +
+                        '📧 البريد: ' + email + ' &nbsp;|&nbsp; 🎂 تاريخ الميلاد: ' + dob + ' &nbsp;|&nbsp; 📅 تاريخ التسجيل: ' + regDate + '<br>' +
+                        '🏛️ الجامعة: ' + (u.university||'-') + ' &nbsp;|&nbsp; الوضع: ' + (u.academicStatus==='student'?'طالب':'خريج') + (u.academicYear?' - سنة '+u.academicYear:'') + '<br>' +
+                        '📍 المحافظة: ' + gov + ' - ' + dist + (u.address?' - ' + u.address:'') + '<br>' +
+                        '<b>📎 المستندات:</b> ';
+                    var docsArr = [];
+                    if(u.idFront) docsArr.push('<a href="'+u.idFront+'" target="_blank" style="color:var(--gold-dark)">بطاقة (وجه)</a>');
+                    if(u.idBack) docsArr.push('<a href="'+u.idBack+'" target="_blank" style="color:var(--gold-dark)">بطاقة (ظهر)</a>');
+                    if(u.carnehFront) docsArr.push('<a href="'+u.carnehFront+'" target="_blank" style="color:var(--gold-dark)">كارنيه (وجه)</a>');
+                    if(u.carnehBack) docsArr.push('<a href="'+u.carnehBack+'" target="_blank" style="color:var(--gold-dark)">كارنيه (ظهر)</a>');
+                    if(u.cert) docsArr.push('<a href="'+u.cert+'" target="_blank" style="color:var(--gold-dark)">شهادة التخرج</a>');
+                    docExtra += (docsArr.length ? docsArr.join(' &nbsp;|&nbsp; ') : 'لا توجد مستندات') + '</td></tr>';
+                } else {
+                    docExtra = '<tr style="background:#fffaf3;"><td colspan="' + cols + '" style="padding:12px 18px;font-size:0.85rem;border-bottom:2px solid var(--sand-dark);">' +
+                        '<b>📋 البيانات التفصيلية:</b><br>' +
+                        '📧 البريد: ' + email + ' &nbsp;|&nbsp; 🎂 تاريخ الميلاد: ' + dob + ' &nbsp;|&nbsp; 📅 تاريخ التسجيل: ' + regDate + '<br>' +
+                        '📍 المحافظة: ' + gov + ' - ' + dist + (u.address?' - ' + u.address:'') + '<br>' +
+                        '<b>📎 الهوية:</b> ';
+                    var citDocs = [];
+                    if(u.idFront) citDocs.push('<a href="'+u.idFront+'" target="_blank" style="color:var(--gold-dark)">هوية (وجه)</a>');
+                    if(u.idBack) citDocs.push('<a href="'+u.idBack+'" target="_blank" style="color:var(--gold-dark)">هوية (ظهر)</a>');
+                    docExtra += (citDocs.length ? citDocs.join(' &nbsp;|&nbsp; ') : 'لا توجد صور') + '</td></tr>';
+                }
+                return docExtra;
+            }
+
+            var rowId = 0;
             users.forEach(function(u) {
+                rowId++;
                 var isDoc = u.role === 'doctor';
                 var tr = document.createElement('tr');
-                
+                var detailId = 'detail-row-' + rowId;
+
                 if (isDoc && u.approvalStatus !== 'approved' && u.approvalStatus !== 'rejected') {
-                    // Pending / Test / Interview Doctor
+                    // أطباء قيد المراجعة
                     var statusMap = { 'pending': 'إنشاء حساب (انتظار)', 'test': 'في مرحلة الاختبار', 'interview': 'في مرحلة المقابلة' };
                     var currStatus = statusMap[u.approvalStatus] || 'غير معروف';
-                    var uniInfo = (u.university||'-') + '<br>' + (u.academicStatus==='student'? 'طالب' : 'خريج');
                     
-                    var docsHTML = '';
-                    if(u.idFront) docsHTML += '<a href="'+u.idFront+'" target="_blank" style="color:var(--gold-dark);display:block;">صورة البطاقة (وجه)</a>';
-                    if(u.idBack) docsHTML += '<a href="'+u.idBack+'" target="_blank" style="color:var(--gold-dark);display:block;">صورة البطاقة (ظهر)</a>';
-                    if(u.carnehFront) docsHTML += '<a href="'+u.carnehFront+'" target="_blank" style="color:var(--gold-dark);display:block;">كارنيه النقابة (وجه)</a>';
-                    if(u.cert) docsHTML += '<a href="'+u.cert+'" target="_blank" style="color:var(--gold-dark);display:block;">شهادة التخرج</a>';
-                    if(!docsHTML) docsHTML = 'لا توجد مستندات';
-
-                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                    tr.innerHTML = '<td><button onclick="var r=document.getElementById(\''+detailId+'\');r.style.display=r.style.display===\'none\'?\'table-row\':\'none\'" style="background:none;border:none;cursor:pointer;color:var(--gold-dark);font-size:1rem;">🔍</button> ' + (u.username||'-') + '</td>' +
                                    '<td>' + (u.phone||'-') + '</td>' +
-                                   '<td>' + uniInfo + '</td>' +
-                                   '<td style="font-size:0.8rem">' + docsHTML + '</td>' +
-                                   '<td><span style="background:var(--sand);padding:4px 8px;border-radius:4px;font-weight:bold;">' + currStatus + '</span></td>' +
+                                   '<td>' + (u.university||'-') + '</td>' +
+                                   '<td><span style="background:var(--sand);padding:3px 8px;border-radius:4px;font-weight:bold;font-size:0.85rem;">' + currStatus + '</span></td>' +
                                    '<td>' +
-                                   '<select onchange="changeDocStatus(\'' + u.username + '\', this.value)" style="padding:4px;border:1px solid var(--sand-dark);border-radius:4px;font-family:inherit;">' +
+                                   '<select onchange="changeDocStatus(\'' + u.username + '\', this.value)" style="padding:4px;border:1px solid var(--sand-dark);border-radius:4px;font-family:inherit;font-size:0.85rem;">' +
                                       '<option value="">اختر الحالة...</option>' +
                                       '<option value="test">نقل للاختبار</option>' +
                                       '<option value="interview">نقل للمقابلة</option>' +
@@ -2708,44 +2890,63 @@
                                    '</select>' +
                                    '</td>';
                     docTbody.appendChild(tr);
-                } else if (u.approvalStatus === 'approved' || (u.status === 'active' && !u.approvalStatus)) { 
-                    var roleText = isDoc ? 'طبيب' : 'مواطن';
-                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                    // صف البيانات التفصيلية
+                    var detailTr = document.createElement('tr');
+                    detailTr.id = detailId;
+                    detailTr.style.display = 'none';
+                    detailTr.innerHTML = buildDetailsRow(u, 5).replace(/^<tr[^>]*>/, '').replace(/<\/tr>$/, '');
+                    docTbody.appendChild(detailTr);
+
+                } else if (u.approvalStatus === 'approved' || (u.status === 'active' && !u.approvalStatus)) {
+                    // حسابات معتمدة (أطباء ومواطنين)
+                    var roleText = isDoc ? '<span style="color:#1a6b2a;font-weight:bold">طبيب معتمد</span>' : '<span style="color:#1a3f6b;font-weight:bold">مواطن</span>';
+                    tr.innerHTML = '<td><button onclick="var r=document.getElementById(\''+detailId+'\');r.style.display=r.style.display===\'none\'?\'table-row\':\'none\'" style="background:none;border:none;cursor:pointer;color:var(--gold-dark);font-size:1rem;">🔍</button> ' + (u.username||'-') + '</td>' +
                                    '<td>' + roleText + '</td>' +
                                    '<td>' + (u.phone||'-') + '</td>' +
-                                   '<td>معتمد</td>' +
+                                   '<td>' + (u.gov||'-') + '</td>' +
                                    '<td>' +
-                                   '<button class="btn btn-submit" style="background:var(--error);padding:5px 10px;font-size:0.8rem;" onclick="suspendUser(\'' + u.username + '\')"><i class="fa-solid fa-ban"></i> سحب الموافقة</button>' +
+                                   '<button class="btn" style="background:var(--error);color:#fff;padding:4px 9px;font-size:0.8rem;" onclick="suspendUser(\'' + u.username + '\')"><i class="fa-solid fa-ban"></i> سحب الموافقة</button>' +
                                    '</td>';
                     appTbody.appendChild(tr);
+                    var detailTr2 = document.createElement('tr');
+                    detailTr2.id = detailId;
+                    detailTr2.style.display = 'none';
+                    detailTr2.innerHTML = buildDetailsRow(u, 5).replace(/^<tr[^>]*>/, '').replace(/<\/tr>$/, '');
+                    appTbody.appendChild(detailTr2);
+
                 } else if (!isDoc && u.approvalStatus === 'pending') {
-                    // Pending Citizen
-                    tr.innerHTML = '<td>' + (u.username||'-') + '</td>' +
+                    // مواطنون قيد المراجعة
+                    tr.innerHTML = '<td><button onclick="var r=document.getElementById(\''+detailId+'\');r.style.display=r.style.display===\'none\'?\'table-row\':\'none\'" style="background:none;border:none;cursor:pointer;color:var(--gold-dark);font-size:1rem;">🔍</button> ' + (u.username||'-') + '</td>' +
                                    '<td>مواطن (جديد)</td>' +
                                    '<td>' + (u.phone||'-') + '</td>' +
                                    '<td>قيد المراجعة</td>' +
                                    '<td>' +
-                                   '<button class="btn btn-gold" style="padding:5px 10px;font-size:0.8rem;margin-left:5px" onclick="approveCitizen(\'' + u.username + '\')"><i class="fa-solid fa-check"></i> اعتماد</button>' +
-                                   '<button class="btn btn-submit" style="background:var(--error);padding:5px 10px;font-size:0.8rem;" onclick="rejectUser(\'' + u.username + '\')"><i class="fa-solid fa-xmark"></i> رفض</button>' +
+                                   '<button class="btn" style="background:var(--success,#2e7d32);color:#fff;padding:4px 9px;font-size:0.8rem;margin-left:5px" onclick="approveCitizen(\'' + u.username + '\')"><i class="fa-solid fa-check"></i> اعتماد</button>' +
+                                   '<button class="btn" style="background:var(--error);color:#fff;padding:4px 9px;font-size:0.8rem;" onclick="rejectUser(\'' + u.username + '\')"><i class="fa-solid fa-xmark"></i> رفض</button>' +
                                    '</td>';
                     appTbody.appendChild(tr);
+                    var detailTr3 = document.createElement('tr');
+                    detailTr3.id = detailId;
+                    detailTr3.style.display = 'none';
+                    detailTr3.innerHTML = buildDetailsRow(u, 5).replace(/^<tr[^>]*>/, '').replace(/<\/tr>$/, '');
+                    appTbody.appendChild(detailTr3);
                 }
             });
 
-            if(docTbody.children.length === 0) docTbody.innerHTML = '<tr><td colspan="6" style="text-align:center">لا يوجد أطباء قيد المراجعة</td></tr>';
-            if(appTbody.children.length === 0) appTbody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا يوجد حسابات معتمدة</td></tr>';
+            if(docTbody.children.length === 0) docTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:15px">لا يوجد أطباء قيد المراجعة</td></tr>';
+            if(appTbody.children.length === 0) appTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:15px">لا يوجد حسابات معتمدة</td></tr>';
 
             var logs = getAdminLogs();
             logs.forEach(function(l) {
                 var ltr = document.createElement('tr');
                 var d = new Date(l.time);
-                var dtStr = d.toLocaleDateString('ar-EG') + ' ' + d.toLocaleTimeString('ar-EG');
+                var dtStr = d.toLocaleDateString('ar-EG') + '  ' + d.toLocaleTimeString('ar-EG');
                 ltr.innerHTML = '<td><span dir="ltr">' + dtStr + '</span></td>' +
                                 '<td>' + (l.phone||'-') + '</td>' +
                                 '<td>' + (l.action||'-') + '</td>';
                 logsTbody.appendChild(ltr);
             });
-            if(logs.length === 0) logsTbody.innerHTML = '<tr><td colspan="3" style="text-align:center">لا يوجد نشاطات مسجلة</td></tr>';
+            if(logs.length === 0) logsTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:15px">لا يوجد نشاطات مسجلة</td></tr>';
         }
 
         function changeDocStatus(username, newStatus) {
