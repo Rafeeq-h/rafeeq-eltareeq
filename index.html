@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
         rel="stylesheet" />
+    <!-- Firebase SDK (v8 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         *,
         *::before,
@@ -1811,8 +1814,59 @@
             'جنوب سيناء': ['شرم الشيخ', 'الطور', 'دهب', 'نويبع']
         };
         var GOVS_ALL = Object.keys(GOV_DATA);
-        var CLOUD_SYNC_URL = 'https://rafeeq-eltareeq-default-rtdb.firebaseio.com/users.json';
+
+        /* ---------- إعدادات Firebase ---------- */
+        var firebaseConfig = {
+            databaseURL: "https://rafeeq-eltareeq-default-rtdb.firebaseio.com"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        var db = firebase.database();
+
         var STORE_KEY = 'rafiq_users';
+
+        /* ربط تغييرات السحابة بالتخزين المحلي فورا */
+        db.ref('users').on('value', function(snap) {
+            if(snap.exists()) {
+                var data = snap.val();
+                var arr = Array.isArray(data) ? data : Object.values(data);
+                localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+                triggerLocalSync();
+            }
+        });
+        db.ref('reports').on('value', function(snap) {
+            if(snap.exists()) {
+                var data = snap.val();
+                localStorage.setItem('rafiq_reports', JSON.stringify(Array.isArray(data) ? data : Object.values(data)));
+                triggerLocalSync();
+            }
+        });
+        db.ref('incidents').on('value', function(snap) {
+            if(snap.exists()) {
+                var data = snap.val();
+                localStorage.setItem('rafiq_incidents', JSON.stringify(Array.isArray(data) ? data : Object.values(data)));
+                triggerLocalSync();
+            }
+        });
+        db.ref('inquiries').on('value', function(snap) {
+            if(snap.exists()) {
+                var data = snap.val();
+                localStorage.setItem('rafiq_inquiries', JSON.stringify(Array.isArray(data) ? data : Object.values(data)));
+                triggerLocalSync();
+            }
+        });
+        db.ref('admin_logs').on('value', function(snap) {
+            if(snap.exists()) {
+                var data = snap.val();
+                localStorage.setItem('rafiq_admin_logs', JSON.stringify(Array.isArray(data) ? data : Object.values(data)));
+                triggerLocalSync();
+            }
+        });
+
+        function triggerLocalSync() {
+            window.dispatchEvent(new Event('storage_sync_custom'));
+        }
 
         /* ---------- دوال مساعدة ---------- */
         function cleanStr(str) { return (str || '').toString().trim().toLowerCase().replace(/[\s\-\+]/g, ''); }
@@ -1842,27 +1896,7 @@
         function saveUsers(u) {
             localStorage.setItem(STORE_KEY, JSON.stringify(u));
             try {
-                fetch(CLOUD_SYNC_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(function () { });
-            } catch (e) { }
-        }
-        function fetchCloudUsers() {
-            try {
-                fetch(CLOUD_SYNC_URL)
-                    .then(function (r) { return r.json(); })
-                    .then(function (data) {
-                        if (!data) return;
-                        var arr = Array.isArray(data) ? data : Object.values(data);
-                        if (arr.length === 0) return;
-                        var local = getUsers();
-                        var merged = local.slice();
-                        arr.forEach(function (cu) {
-                            var i = merged.findIndex(function (x) { return cleanStr(x.username) === cleanStr(cu.username); });
-                            if (i > -1) merged[i] = Object.assign({}, merged[i], cu);
-                            else merged.push(cu);
-                        });
-                        localStorage.setItem(STORE_KEY, JSON.stringify(merged));
-                    })
-                    .catch(function () { });
+                db.ref('users').set(u);
             } catch (e) { }
         }
         function getSession() {
@@ -2350,11 +2384,11 @@
 
         /* ---------- تخزين مؤقت للبلاغات ---------- */
         function getStoredReports() { try { return JSON.parse(localStorage.getItem('rafiq_reports')) || []; } catch (e) { return []; } }
-        function saveStoredReports(r) { localStorage.setItem('rafiq_reports', JSON.stringify(r)); }
+        function saveStoredReports(r) { localStorage.setItem('rafiq_reports', JSON.stringify(r)); try { db.ref('reports').set(r); } catch(e){} }
         function getStoredIncidents() { try { return JSON.parse(localStorage.getItem('rafiq_incidents')) || []; } catch (e) { return []; } }
-        function saveStoredIncidents(inc) { localStorage.setItem('rafiq_incidents', JSON.stringify(inc)); }
+        function saveStoredIncidents(inc) { localStorage.setItem('rafiq_incidents', JSON.stringify(inc)); try { db.ref('incidents').set(inc); } catch(e){} }
         function getStoredInquiries() { try { return JSON.parse(localStorage.getItem('rafiq_inquiries')) || []; } catch (e) { return []; } }
-        function saveStoredInquiries(inq) { localStorage.setItem('rafiq_inquiries', JSON.stringify(inq)); }
+        function saveStoredInquiries(inq) { localStorage.setItem('rafiq_inquiries', JSON.stringify(inq)); try { db.ref('inquiries').set(inq); } catch(e){} }
 
         /* ---------- عرض التبويبات ---------- */
         function renderMainTab(user, roleKey) {
@@ -2795,7 +2829,9 @@
             try {
                 var logs = getAdminLogs();
                 logs.unshift({ time: Date.now(), phone: adminPhone, action: action });
-                localStorage.setItem('rafiq_admin_logs', JSON.stringify(logs.slice(0, 500))); // keep last 500
+                var sliced = logs.slice(0, 500);
+                localStorage.setItem('rafiq_admin_logs', JSON.stringify(sliced)); // keep last 500
+                try { db.ref('admin_logs').set(sliced); } catch(e){}
             } catch (e) { console.error('logAdminAction error:', e); }
         }
 
@@ -3040,12 +3076,52 @@
             document.getElementById('prog-msg-desc').textContent = msgDesc;
         }
 
+        /* ---------- التخصيص والمظهر ---------- */
+        function toggleDarkMode(isDark) {
+            if(isDark) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('rafiq_dark_mode', '1');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('rafiq_dark_mode', '0');
+            }
+        }
+
+        /* ---------- المزامنة الفورية بين النوافذ والأجهزة ---------- */
+        function handleSyncEvent() {
+            var session = getSession();
+            if (session && session.role === 'superadmin') {
+                renderAdminDashboard();
+            } else if (session) {
+                var users = getUsers();
+                var freshUser = users.find(function(u) { return cleanStr(u.username) === cleanStr(session.username); });
+                if(freshUser) {
+                    saveSession(freshUser);
+                    if (document.getElementById('role-dynamic-main').innerHTML !== '') {
+                        enterPlatform(freshUser); // re-render
+                    }
+                } else {
+                    logout();
+                }
+            }
+        }
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'rafiq_users' || e.key === 'rafiq_admin_logs' || e.key === 'rafiq_reports' || e.key === 'rafiq_incidents' || e.key === 'rafiq_inquiries') {
+                handleSyncEvent();
+            }
+        });
+        window.addEventListener('storage_sync_custom', handleSyncEvent);
+
+
         /* ---------- التهيئة عند تحميل الصفحة ---------- */
         window.addEventListener('load', function () {
             console.log('📦 Page loaded');
+            if(localStorage.getItem('rafiq_dark_mode') === '1') {
+                document.body.classList.add('dark-mode');
+            }
+
             try { populateGovs('d-gov'); } catch (e) { console.error(e); }
             try { populateGovs('c-gov'); } catch (e) { console.error(e); }
-            try { fetchCloudUsers(); } catch (e) { console.error(e); }
             wireGatewayButtons();
 
             /* تسجيل دخول تلقائي — لو فيه جلسة محفوظة */
