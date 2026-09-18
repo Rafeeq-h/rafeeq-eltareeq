@@ -2265,9 +2265,17 @@
                     return cleanStr(u.username) === cleanStr(username) || (u.email && cleanStr(u.email) === cleanStr(email));
                 });
                 if (exists) {
-                    setErr('err-d-username', 'اسم المستخدم أو البريد مسجل بالفعل');
-                    showAlert('اسم المستخدم أو البريد مسجل بالفعل!');
-                    return;
+                    // السماح بإعادة التسجيل لو الحساب السابق مرفوض فقط
+                    if (exists.approvalStatus === 'rejected') {
+                        // حذف الحساب المرفوض القديم للسماح بالتسجيل من جديد
+                        users = users.filter(function(u) {
+                            return !(cleanStr(u.username) === cleanStr(username) || (u.email && cleanStr(u.email) === cleanStr(email)));
+                        });
+                    } else {
+                        setErr('err-d-username', 'اسم المستخدم أو البريد مسجل بالفعل');
+                        showAlert('اسم المستخدم أو البريد مسجل بالفعل!');
+                        return;
+                    }
                 }
 
                 var idFront = (document.getElementById('prev-d-id-front') || {}).src || '';
@@ -2315,9 +2323,14 @@
             var users2 = getUsers();
             var exists2 = users2.find(function (u) { return cleanStr(u.username) === cleanStr(cu); });
             if (exists2) {
-                setErr('err-c-username', 'اسم المستخدم مسجل بالفعل');
-                showAlert('اسم المستخدم مسجل بالفعل!');
-                return;
+                // السماح بإعادة التسجيل لو الحساب القديم مرفوض فقط
+                if (exists2.approvalStatus === 'rejected') {
+                    users2 = users2.filter(function(u) { return cleanStr(u.username) !== cleanStr(cu); });
+                } else {
+                    setErr('err-c-username', 'اسم المستخدم مسجل بالفعل');
+                    showAlert('اسم المستخدم مسجل بالفعل!');
+                    return;
+                }
             }
 
             var cidFront = (document.getElementById('prev-c-id-front') || {}).src || '';
@@ -2326,7 +2339,7 @@
             var cuser = {
                 username: cu, email: ce, phone: cp, dob: cd, pass: cps,
                 gov: cg, district: cdis, address: caddr,
-                role: 'citizen', approvalStatus: 'approved',
+                role: 'citizen', approvalStatus: 'approved', status: 'active',
                 deviceIp: deviceIp, createdAt: Date.now(),
                 idFront: cidFront, idBack: cidBack
             };
